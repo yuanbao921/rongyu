@@ -282,3 +282,4 @@ function initApp() {
   addChatMsg('sys', '🐻 小熊已上线 🐰');
 }
 // update
+// update test
