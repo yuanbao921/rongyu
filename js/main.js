@@ -185,7 +185,94 @@ document.getElementById('settings-overlay').addEventListener('click', e => {
 });
 
 /* ========== 初始化入口 ========== */
+/* ========== 头像管理 ========== */
+function compressAvatar(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const SIZE = 300;
+        const canvas = document.createElement('canvas');
+        canvas.width = SIZE; canvas.height = SIZE;
+        const ctx = canvas.getContext('2d');
+        // 裁剪为正方形居中
+        const min = Math.min(img.width, img.height);
+        const sx = (img.width - min) / 2;
+        const sy = (img.height - min) / 2;
+        ctx.drawImage(img, sx, sy, min, min, 0, 0, SIZE, SIZE);
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function applyAvatarToUI(who, b64) {
+  // 开屏头像
+  const img   = document.getElementById('splash-img-' + who);
+  const emoji = document.getElementById('splash-emoji-' + who);
+  if (b64) {
+    img.src = b64; img.style.display = 'block'; emoji.style.display = 'none';
+  } else {
+    img.style.display = 'none'; emoji.style.display = 'block';
+  }
+  // 设置页预览
+  const prev = document.getElementById(who + '-avatar-preview');
+  if (prev) {
+    if (b64) prev.innerHTML = `<img src="${b64}">`;
+    else     prev.textContent = who === 'bear' ? '🐻' : '🐰';
+  }
+}
+
+function setupAvatarUpload(who) {
+  const btn   = document.getElementById(who + '-avatar-btn');
+  const input = document.getElementById(who + '-avatar-input');
+  const clear = document.getElementById(who + '-avatar-clear');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => { tap(); input.click(); });
+
+  input.addEventListener('change', async () => {
+    const file = input.files[0]; if (!file) return;
+    try {
+      const b64 = await compressAvatar(file);
+      Store.set(who + 'Avatar', b64);
+      applyAvatarToUI(who, b64);
+      tap([10, 20, 10]);
+    } catch { addPush('⚠️', '图片处理失败，请换一张'); }
+    input.value = '';
+  });
+
+  clear.addEventListener('click', () => {
+    tap();
+    Store.set(who + 'Avatar', '');
+    applyAvatarToUI(who, null);
+  });
+}
+
+function restoreAvatars() {
+  applyAvatarToUI('bear',  Store.get('bearAvatar',  ''));
+  applyAvatarToUI('bunny', Store.get('bunnyAvatar', ''));
+}
+
+/* ========== 开屏页 ========== */
+function initSplash() {
+  restoreAvatars();
+  const splash = document.getElementById('splash');
+  // 点击立即跳过
+  splash.addEventListener('click', () => splash.classList.add('hidden'));
+  // 3秒后自动消失
+  setTimeout(() => splash.classList.add('hidden'), 3000);
+}
+
 function initApp() {
+  initSplash();
+  setupAvatarUpload('bear');
+  setupAvatarUpload('bunny');
   setGreeting();
   showRandomQuote();
   renderPushes();
