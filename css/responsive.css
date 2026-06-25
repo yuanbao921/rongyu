@@ -1,0 +1,70 @@
+/* ============================================================
+   responsive.css — 手机端适配 & 安全区域处理
+   ============================================================ */
+
+/* ---------- 刘海屏 / 圆角屏安全区 ---------- */
+#dock {
+  /* 底部安全区已在 layout.css 中通过 env() 处理 */
+  padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px));
+}
+
+#status-bar {
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+}
+
+/* ---------- 窄屏（< 360px，极小手机）---------- */
+@media (max-width: 359px) {
+  .home-greeting { font-size: 18px; }
+  .weather-temp  { font-size: 22px; }
+  .dock-item     { max-width: 60px; }
+  .dock-item .di-icon  { font-size: 20px; }
+  .dock-item .di-label { font-size: 8px; }
+  .mood-item { padding: 5px 10px; font-size: 12px; }
+}
+
+/* ---------- 宽屏（平板 / 大屏手机 > 480px）---------- */
+@media (min-width: 480px) {
+  #app {
+    max-width: 430px;
+    margin: 0 auto;
+    /* 在大屏上居中展示 */
+    box-shadow: 0 0 60px rgba(120, 80, 70, 0.12);
+  }
+}
+
+/* ---------- 横屏 ---------- */
+@media (orientation: landscape) and (max-height: 500px) {
+  #status-bar { padding-top: 6px; padding-bottom: 4px; }
+  .home-greeting { font-size: 18px; margin-bottom: 1px; }
+  .card { padding: 12px 16px; margin-bottom: 8px; }
+  #dock { padding-top: 2px; }
+  .dock-item { padding: 4px 0 2px; }
+}
+
+/* ---------- 高分辨率屏幕 ---------- */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .batt-ring,
+  .batt-ring::after,
+  .batt-ring::before {
+    /* 高清屏保持细线清晰 */
+    transform: translateZ(0);
+  }
+}
+
+/* ---------- 滚动平滑 ---------- */
+.page,
+.notes-scroll,
+#chat-msgs {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* ---------- 禁止文本选中（非输入框）---------- */
+body, .card, .dock-item, .mood-item, .push-item {
+  -webkit-user-select: none;
+  user-select: none;
+}
+textarea, input {
+  -webkit-user-select: text;
+  user-select: text;
+}

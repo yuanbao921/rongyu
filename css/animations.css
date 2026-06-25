@@ -1,0 +1,72 @@
+/* ============================================================
+   animations.css — 所有动画定义
+   ============================================================ */
+
+/* ---------- 页面侧滑（由 layout.css 中 .page / .leaving 触发）---------- */
+/* 过渡已在 layout.css .page 的 transition 属性中定义，此处补充关键帧备用 */
+
+/* ---------- 心语卡片刷新淡入 ---------- */
+@keyframes quoteFade {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+.quote-refresh {
+  animation: quoteFade 0.38s var(--ease-out) both;
+}
+
+/* ---------- 推送滑入 ---------- */
+@keyframes pushSlide {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+.push-item {
+  animation: pushSlide 0.32s var(--ease-smooth) both;
+}
+
+/* ---------- 心情选中弹跳 ---------- */
+@keyframes moodPop {
+  0%   { transform: scale(0.90); }
+  55%  { transform: scale(1.08); }
+  100% { transform: scale(1);    }
+}
+.mood-item.selected {
+  animation: moodPop 0.28s var(--ease-spring) both;
+}
+
+/* ---------- 便签新建滑入 ---------- */
+@keyframes noteAppear {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+.note-paper.new {
+  animation: noteAppear 0.36s var(--ease-out) both;
+}
+
+/* ---------- 卡片按压（补充 style.css 的 :active）---------- */
+/* 松手回弹 */
+@keyframes cardRelease {
+  from { transform: scale(0.955); }
+  to   { transform: scale(1);     }
+}
+.card-released {
+  animation: cardRelease 0.3s var(--ease-spring) both;
+}
+
+/* ---------- 设置弹窗浮现 ---------- */
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes boxUp {
+  from { transform: translateY(40px) scale(0.97); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+#settings-overlay.show {
+  animation: overlayIn 0.25s var(--ease-smooth) both;
+}
+#settings-overlay.show #settings-box {
+  animation: boxUp 0.35s var(--ease-spring) both;
+}
+
+/* ---------- Dock 图标按压 ---------- */
+/* 已在 layout.css .dock-item:active 处理，这里不重复 */
