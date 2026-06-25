@@ -144,26 +144,48 @@
         <div id="ai-comment">选一个频道，我们一起开始。</div>
       </div>
 
-      <!-- 频道选择 -->
+      <!-- 音乐平台选择 -->
       <div class="channel-section">
-        <div class="channel-label">音乐频道</div>
-        <div id="channel-row"></div>
+        <div class="channel-label">音乐来源</div>
+        <div class="music-source-row">
+          <button class="source-chip active" data-source="local">📱 本地音乐</button>
+          <button class="source-chip" data-source="youtube">▶️ YouTube</button>
+        </div>
       </div>
 
-      <!-- 播放器 -->
-      <div class="music-player-card">
+      <!-- 本地播放器 -->
+      <div class="music-player-card" id="local-player-card">
         <div class="music-now-row">
           <div id="track-art">🎵</div>
           <div class="music-info">
-            <div id="track-name">选择频道后开始播放</div>
-            <div id="track-artist">Jamendo · 免费正版音乐</div>
+            <div id="track-name">点击选择本地音乐</div>
+            <div id="track-artist">支持 MP3 / AAC / OGG</div>
           </div>
+          <button id="local-pick-btn" class="local-pick-btn">＋</button>
+        </div>
+        <div class="music-progress-wrap">
+          <div class="music-progress-bar" id="local-progress-bar"></div>
         </div>
         <div class="music-controls">
           <button id="music-prev-btn">⏮</button>
           <button id="music-play-btn">▶</button>
           <button id="music-next-btn">⏭</button>
         </div>
+        <!-- 本地播放列表 -->
+        <div id="local-playlist" class="local-playlist"></div>
+        <input type="file" id="local-file-input" accept="audio/*" multiple style="display:none">
+      </div>
+
+      <!-- YouTube 播放器 -->
+      <div class="music-player-card" id="yt-player-card" style="display:none">
+        <div class="yt-search-row">
+          <input id="yt-search-inp" class="yt-search-inp" placeholder="搜索 YouTube 音乐…">
+          <button id="yt-search-btn">搜索</button>
+        </div>
+        <div id="yt-embed-wrap" class="yt-embed-wrap">
+          <div class="yt-placeholder">搜索后选择歌曲播放 🎵</div>
+        </div>
+        <div id="yt-results" class="yt-results"></div>
       </div>
 
       <div style="height:6px;flex-shrink:0;"></div>
