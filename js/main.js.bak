@@ -221,12 +221,15 @@ document.querySelectorAll('.theme-chip').forEach(chip => {
 
 function applyTheme(theme) {
   const root = document.documentElement;
-  // Remove all theme attributes
-  THEMES.forEach(t => root.removeAttribute('data-theme-' + t));
   if (theme && theme !== 'rose') {
     root.setAttribute('data-theme', theme);
   } else {
     root.removeAttribute('data-theme');
+  }
+  // Splash 背景跟随主题
+  const splash = document.getElementById('splash');
+  if (splash) {
+    splash.style.background = 'var(--glass)';
   }
 }
 
@@ -374,32 +377,57 @@ if (Math.random() < 0.6) {
 }
 
 /* ========== 陆沉日记 ========== */
-async function generateDiary() {
+
+// 从聊天记录中提取关键词/摘要，存入当天日记素材
+function saveChatMemoForDiary(userText, aiText) {
+  const today = new Date();
+  const dateStr = (today.getMonth()+1) + '月' + today.getDate() + '日';
+  let memos = Store.getJSON('diaryMemos', {});
+  if (!memos[dateStr]) memos[dateStr] = [];
+  // 每次聊天存一条简短摘要（取前30字）
+  const snippet = (userText.slice(0,20) + '→' + aiText.slice(0,20)).replace(/\n/g,' ');
+  memos[dateStr].push(snippet);
+  // 最多保留10条
+  if (memos[dateStr].length > 10) memos[dateStr] = memos[dateStr].slice(-10);
+  Store.setJSON('diaryMemos', memos);
+  // 攒够3条聊天就重新生成日记
+  if (memos[dateStr].length >= 3) generateDiary(true);
+}
+
+async function generateDiary(forceRegen) {
   const s = loadSettings();
   const el2 = document.getElementById('diary-card-content');
-  const dateEl = document.getElementById('diary-card-date');
   if (!el2) return;
 
   const today = new Date();
   const dateStr = (today.getMonth()+1) + '月' + today.getDate() + '日';
-  if (dateEl) dateEl.textContent = dateStr;
 
-  const cached = Store.get('diaryDate','');
-  if (cached === dateStr) {
-    el2.textContent = Store.get('diaryContent','今天还没有写…');
-    return;
+  // 读取今天的聊天素材
+  const memos = Store.getJSON('diaryMemos', {});
+  const todayMemos = memos[dateStr] || [];
+
+  // 没有聊天记录且不强制重生成，用缓存
+  if (!forceRegen) {
+    const cached = Store.get('diaryDate','');
+    if (cached === dateStr) {
+      el2.textContent = Store.get('diaryContent','今天还没有写…');
+      return;
+    }
   }
 
-  el2.textContent = '正在写今天的日记…';
+  el2.textContent = '正在写…';
   try {
     const key = Store.get('aiKey','') || 'sk-aa1485e2789f4b438a83290146907fa8';
+    const memoContext = todayMemos.length
+      ? '今天和她聊天的片段：' + todayMemos.join('；')
+      : '';
     const res = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'deepseek-chat',
         messages: [
-          { role: 'system', content: `你是${s.aiName||'陆沉'}，深爱着${s.userName||'兔子小姐'}。用第一人称写今天的一篇简短日记，不超过60字，温柔深情，像在心里悄悄说给她听。` },
+          { role: 'system', content: `你是${s.aiName||'陆沉'}，深爱着${s.userName||'兔子小姐'}。用第一人称写今天的简短日记，不超过60字，温柔深情，像在心里悄悄说给她听。${memoContext ? '请结合这些聊天片段写：' + memoContext : ''}` },
           { role: 'user', content: '写今天的日记。' }
         ],
         max_tokens: 150,
