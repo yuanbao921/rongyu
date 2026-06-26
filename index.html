@@ -64,12 +64,12 @@
 
   <div class="panel-section-title">主题色</div>
   <div class="theme-color-grid" id="theme-color-grid">
-    <div class="theme-chip active" data-rose="#C2827A" data-bg="#F5EDE4" style="background:#C2827A"></div>
-    <div class="theme-chip" data-rose="#8FA8C8" data-bg="#EDF0F5" style="background:#8FA8C8"></div>
-    <div class="theme-chip" data-rose="#8FB89A" data-bg="#EDF3EE" style="background:#8FB89A"></div>
-    <div class="theme-chip" data-rose="#B89A8F" data-bg="#F3EEEC" style="background:#B89A8F"></div>
-    <div class="theme-chip" data-rose="#A890B8" data-bg="#F0EDF5" style="background:#A890B8"></div>
-    <div class="theme-chip" data-rose="#C4A882" data-bg="#F5F0E8" style="background:#C4A882"></div>
+    <div class="theme-chip active" data-theme="rose"   style="background:#C2827A" title="玫瑰奶茶"></div>
+    <div class="theme-chip"        data-theme="blue"   style="background:#7A9EC8" title="天空蓝"></div>
+    <div class="theme-chip"        data-theme="green"  style="background:#7AAA88" title="抹茶绿"></div>
+    <div class="theme-chip"        data-theme="brown"  style="background:#B89A80" title="棕糖"></div>
+    <div class="theme-chip"        data-theme="purple" style="background:#A080C0" title="薰衣草"></div>
+    <div class="theme-chip"        data-theme="gold"   style="background:#C8A060" title="金秋"></div>
   </div>
 
   <div class="panel-section-title">壁纸</div>
@@ -145,9 +145,8 @@
   <!-- 顶部状态栏 -->
   <div id="status-bar">
     <button id="left-panel-btn" class="status-panel-btn">☰</button>
-    <div id="status-center-info">
-      <span id="status-time">00:00</span>
-      <span id="status-date">6月26日 周五</span>
+    <div id="status-brand">
+      <span class="brand-text">Rongyu</span>
     </div>
     <button id="right-panel-btn" class="status-panel-btn">⚙</button>
   </div>
@@ -158,64 +157,54 @@
     <!-- 首页 -->
     <div class="page active" id="page-home">
 
-      <!-- 大时间显示 -->
-      <div class="home-time-block">
+      <!-- 上半屏：锁屏时间 -->
+      <div class="home-lockscreen">
         <div class="home-big-time" id="home-big-time">00:00</div>
-        <div class="home-big-date" id="home-big-date">6月26日 周五</div>
-      </div>
-
-      <!-- 纪念日卡片 -->
-      <div class="card anniversary-card" id="anniversary-card" style="display:none">
-        <div class="anniversary-icon">💕</div>
-        <div class="anniversary-info">
-          <div class="anniversary-label" id="anniversary-label-display">在一起</div>
-          <div class="anniversary-days" id="anniversary-days">第 0 天</div>
+        <div class="home-date-row">
+          <span id="home-big-date">6月26日 周五</span>
         </div>
-        <div class="anniversary-date" id="anniversary-date-display">—</div>
+        <div class="home-greeting-sub" id="home-greeting">早安，兔子小姐🐰</div>
       </div>
 
-      <!-- 问候 -->
-      <div class="home-greeting-wrap">
-        <div id="home-greeting" class="home-greeting">午后好，兔子小姐🐰</div>
-        <div id="home-sub" class="home-sub">有只小熊在偷偷想你</div>
-      </div>
+      <!-- 下半屏：2×2 卡片网格 -->
+      <div class="home-grid">
 
-      <!-- 陆沉日记卡片 -->
-      <div class="card diary-card" id="diary-card">
-        <div class="diary-card-header">
-          <span class="diary-card-title">📖 他的日记</span>
-          <span class="diary-card-date" id="diary-card-date">今日</span>
+        <!-- 心语卡片 -->
+        <div class="home-grid-card" id="grid-quote" onclick="refreshGridQuote()">
+          <div class="grid-card-label">💌 心语</div>
+          <div class="grid-quote-text" id="quote-text">「你是我在长夜尽头看见的第一缕光。」</div>
+          <div class="grid-quote-source" id="quote-source">— 陆沉</div>
         </div>
-        <div class="diary-card-content" id="diary-card-content">今天还没有写…</div>
-      </div>
 
-      <!-- 心语卡片 -->
-      <div class="card quote-card" id="quote-card">
-        <div class="quote-text" id="quote-text">「你是我在长夜尽头看见的第一缕光。」</div>
-        <div class="quote-source" id="quote-source">— 陆沉</div>
-        <div class="quote-hint">轻触换一句</div>
-      </div>
-
-      <!-- 心情 -->
-      <div class="card mood-card">
-        <div class="mood-title">💭 今天的心情</div>
-        <div class="mood-grid" id="mood-grid">
-          <div class="mood-item" data-mood="happy">☀️ 开心</div>
-          <div class="mood-item" data-mood="calm">🌿 平静</div>
-          <div class="mood-item" data-mood="sad">🌧 难过</div>
-          <div class="mood-item" data-mood="miss">💕 想你</div>
-          <div class="mood-item" data-mood="tired">🕯 疲惫</div>
-          <div class="mood-item" data-mood="love">🌸 心动</div>
+        <!-- 纪念日卡片 -->
+        <div class="home-grid-card" id="grid-anniversary">
+          <div class="grid-card-label">💕 纪念日</div>
+          <div class="anniversary-big-days" id="anniversary-days">—</div>
+          <div class="anniversary-unit">天</div>
+          <div class="anniversary-name" id="anniversary-label-display">设置日期</div>
+          <div class="anniversary-since" id="anniversary-date-display"></div>
         </div>
-      </div>
 
-      <!-- 推送 -->
-      <div class="card push-card">
-        <div class="push-title">💌 来自小熊的消息</div>
-        <div class="push-list" id="push-list"></div>
-      </div>
+        <!-- 日记卡片 -->
+        <div class="home-grid-card" id="grid-diary">
+          <div class="grid-card-label">📖 他的日记</div>
+          <div class="grid-diary-text" id="diary-card-content">今天还没有写…</div>
+        </div>
 
-      <div style="height:6px;flex-shrink:0;"></div>
+        <!-- 心情卡片 -->
+        <div class="home-grid-card" id="grid-mood">
+          <div class="grid-card-label">💭 心情</div>
+          <div class="grid-mood-grid" id="mood-grid">
+            <div class="grid-mood-item" data-mood="happy">☀️<span>开心</span></div>
+            <div class="grid-mood-item" data-mood="calm">🌿<span>平静</span></div>
+            <div class="grid-mood-item" data-mood="sad">🌧<span>难过</span></div>
+            <div class="grid-mood-item" data-mood="miss">💕<span>想你</span></div>
+            <div class="grid-mood-item" data-mood="tired">🕯<span>疲惫</span></div>
+            <div class="grid-mood-item" data-mood="love">🌸<span>心动</span></div>
+          </div>
+        </div>
+
+      </div><!-- /home-grid -->
     </div>
 
     <!-- 便签页 -->

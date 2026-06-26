@@ -2,17 +2,14 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0,
-                 user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#F5EDE4">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="绒语">
   <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&display=swap">
   <title>绒语</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -40,19 +37,119 @@
   </div>
 </div>
 
+<!-- 左侧面板遮罩 -->
+<div id="left-overlay" class="panel-overlay"></div>
+<!-- 右侧面板遮罩 -->
+<div id="right-overlay" class="panel-overlay"></div>
+
+<!-- 左侧面板 -->
+<div id="left-panel">
+  <div class="panel-header">🎨 个性设置</div>
+
+  <div class="panel-section-title">头像</div>
+  <div class="panel-avatar-row">
+    <div class="panel-av-wrap">
+      <div class="avatar-preview" id="bear-avatar-preview">🐻</div>
+      <div class="panel-av-label">小熊</div>
+      <button class="panel-av-btn" id="bear-avatar-btn">换</button>
+      <input type="file" id="bear-avatar-input" accept="image/*" style="display:none">
+    </div>
+    <div class="panel-av-wrap">
+      <div class="avatar-preview" id="bunny-avatar-preview">🐰</div>
+      <div class="panel-av-label">兔子</div>
+      <button class="panel-av-btn" id="bunny-avatar-btn">换</button>
+      <input type="file" id="bunny-avatar-input" accept="image/*" style="display:none">
+    </div>
+  </div>
+
+  <div class="panel-section-title">主题色</div>
+  <div class="theme-color-grid" id="theme-color-grid">
+    <div class="theme-chip active" data-rose="#C2827A" data-bg="#F5EDE4" style="background:#C2827A"></div>
+    <div class="theme-chip" data-rose="#8FA8C8" data-bg="#EDF0F5" style="background:#8FA8C8"></div>
+    <div class="theme-chip" data-rose="#8FB89A" data-bg="#EDF3EE" style="background:#8FB89A"></div>
+    <div class="theme-chip" data-rose="#B89A8F" data-bg="#F3EEEC" style="background:#B89A8F"></div>
+    <div class="theme-chip" data-rose="#A890B8" data-bg="#F0EDF5" style="background:#A890B8"></div>
+    <div class="theme-chip" data-rose="#C4A882" data-bg="#F5F0E8" style="background:#C4A882"></div>
+  </div>
+
+  <div class="panel-section-title">壁纸</div>
+  <div class="panel-wp-row">
+    <button class="panel-btn" id="wp-pick">📷 选择图片</button>
+    <button class="panel-btn panel-btn-ghost" id="wp-clear">清除</button>
+  </div>
+
+  <div class="panel-section-title">纪念日</div>
+  <input class="panel-input" id="anniversary-input" type="date" placeholder="选择日期">
+  <input class="panel-input" id="anniversary-label" type="text" placeholder="纪念日名称，如 在一起">
+
+  <div class="panel-section-title">基本设置</div>
+  <div class="panel-field-label">他的名字</div>
+  <input class="panel-input" id="s-name" placeholder="陆沉">
+  <div class="panel-field-label">你的名字</div>
+  <input class="panel-input" id="s-uname" placeholder="兔子小姐">
+  <div class="panel-field-label">他的人设</div>
+  <textarea class="panel-input" id="s-profile" rows="3" placeholder="温柔深情，只对你一人放下防备…"></textarea>
+  <div class="panel-field-label">心语库（一行一句）</div>
+  <textarea class="panel-input" id="s-quotes" rows="4" placeholder="留空使用内置心语库"></textarea>
+
+  <button class="panel-save-btn" id="left-save-btn">💾 保存</button>
+</div>
+
+<!-- 右侧面板 -->
+<div id="right-panel">
+  <div class="panel-header">⚙️ AI 设置</div>
+
+  <div class="panel-section-title">AI 服务商</div>
+  <select class="panel-select" id="ai-provider">
+    <option value="deepseek">DeepSeek</option>
+    <option value="openai">OpenAI</option>
+    <option value="claude">Claude</option>
+  </select>
+
+  <div class="panel-field-label">API Key</div>
+  <input class="panel-input" id="ai-key-input" type="password" placeholder="sk-...">
+  <button class="panel-btn" id="show-key-btn" style="margin-top:6px">👁 显示/隐藏</button>
+
+  <div class="panel-field-label">Token 余额</div>
+  <div class="token-display" id="token-display">— 点击刷新 —</div>
+  <button class="panel-btn" id="refresh-token-btn">🔄 刷新余额</button>
+
+  <div class="panel-section-title">主动讲话</div>
+  <div class="panel-switch-row">
+    <span class="panel-switch-label">开启主动问候</span>
+    <label class="switch">
+      <input type="checkbox" id="proactive-toggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+  <div class="panel-field-label">触发时间（每天）</div>
+  <input class="panel-input" id="proactive-time" type="time" value="20:00">
+
+  <div class="panel-section-title">主动日记</div>
+  <div class="panel-switch-row">
+    <span class="panel-switch-label">让他主动写日记</span>
+    <label class="switch">
+      <input type="checkbox" id="diary-toggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+  <div class="panel-field-label">日记时间</div>
+  <input class="panel-input" id="diary-time" type="time" value="22:00">
+
+  <button class="panel-save-btn" id="right-save-btn">💾 保存</button>
+</div>
+
+<!-- 主应用 -->
 <div id="app">
 
   <!-- 顶部状态栏 -->
   <div id="status-bar">
-    <div id="status-left">
+    <button id="left-panel-btn" class="status-panel-btn">☰</button>
+    <div id="status-center-info">
       <span id="status-time">00:00</span>
-      <span id="status-date">6月23日 周二</span>
+      <span id="status-date">6月26日 周五</span>
     </div>
-    <div id="status-right">
-      <span class="status-signal">▪▪▪</span>
-      <span class="batt-ring"></span>
-      <button id="menu-btn" aria-label="菜单"><span></span><span></span><span></span></button>
-    </div>
+    <button id="right-panel-btn" class="status-panel-btn">⚙</button>
   </div>
 
   <!-- 页面容器 -->
@@ -60,24 +157,46 @@
 
     <!-- 首页 -->
     <div class="page active" id="page-home">
-      <div id="home-greeting" class="home-greeting">午后好，兔子小姐🐰</div>
-      <div id="home-sub"      class="home-sub">今天阳光很轻，像你的呼吸</div>
 
-      <div class="card weather-card" id="weather-card">
-        <div class="weather-icon" id="w-icon">🌤</div>
-        <div class="weather-info">
-          <div class="weather-temp" id="w-temp">--°</div>
-          <div class="weather-desc" id="w-desc">加载中…</div>
-          <div class="weather-city" id="w-city">📍 上海</div>
-        </div>
+      <!-- 大时间显示 -->
+      <div class="home-time-block">
+        <div class="home-big-time" id="home-big-time">00:00</div>
+        <div class="home-big-date" id="home-big-date">6月26日 周五</div>
       </div>
 
+      <!-- 纪念日卡片 -->
+      <div class="card anniversary-card" id="anniversary-card" style="display:none">
+        <div class="anniversary-icon">💕</div>
+        <div class="anniversary-info">
+          <div class="anniversary-label" id="anniversary-label-display">在一起</div>
+          <div class="anniversary-days" id="anniversary-days">第 0 天</div>
+        </div>
+        <div class="anniversary-date" id="anniversary-date-display">—</div>
+      </div>
+
+      <!-- 问候 -->
+      <div class="home-greeting-wrap">
+        <div id="home-greeting" class="home-greeting">午后好，兔子小姐🐰</div>
+        <div id="home-sub" class="home-sub">有只小熊在偷偷想你</div>
+      </div>
+
+      <!-- 陆沉日记卡片 -->
+      <div class="card diary-card" id="diary-card">
+        <div class="diary-card-header">
+          <span class="diary-card-title">📖 他的日记</span>
+          <span class="diary-card-date" id="diary-card-date">今日</span>
+        </div>
+        <div class="diary-card-content" id="diary-card-content">今天还没有写…</div>
+      </div>
+
+      <!-- 心语卡片 -->
       <div class="card quote-card" id="quote-card">
-        <div class="quote-text"   id="quote-text">「你是我在长夜尽头看见的第一缕光。」</div>
+        <div class="quote-text" id="quote-text">「你是我在长夜尽头看见的第一缕光。」</div>
         <div class="quote-source" id="quote-source">— 陆沉</div>
         <div class="quote-hint">轻触换一句</div>
       </div>
 
+      <!-- 心情 -->
       <div class="card mood-card">
         <div class="mood-title">💭 今天的心情</div>
         <div class="mood-grid" id="mood-grid">
@@ -90,6 +209,7 @@
         </div>
       </div>
 
+      <!-- 推送 -->
       <div class="card push-card">
         <div class="push-title">💌 来自小熊的消息</div>
         <div class="push-list" id="push-list"></div>
@@ -103,48 +223,33 @@
       <div class="notes-header">📝 便签 · 小纸条</div>
       <div class="notes-scroll" id="notes-scroll"></div>
       <div id="note-area">
-        <textarea id="note-inp" placeholder="写一张小纸条…小熊下次打开时就会看到✍️"></textarea>
+        <textarea id="note-inp" placeholder="写一张小纸条…小熊待会儿会回信✍️"></textarea>
         <button id="note-btn">留下</button>
-      </div>
-    </div>
-
-    <!-- 聊天页 -->
-    <div class="page" id="page-chat">
-      <div id="chat-msgs"></div>
-      <div id="chat-foot">
-        <textarea id="chat-inp" rows="1" placeholder="说点什么…"></textarea>
-        <button id="chat-send">➤</button>
       </div>
     </div>
 
     <!-- 专注页 -->
     <div class="page" id="page-focus">
-
-      <!-- 番茄钟 -->
       <div class="focus-timer-wrap">
         <div class="focus-ring-container">
           <svg class="focus-ring-svg" viewBox="0 0 100 100">
-            <circle class="focus-ring-bg"       cx="50" cy="50" r="44"/>
-            <circle class="focus-ring-progress" cx="50" cy="50" r="44"
-                    id="focus-ring-progress"
-                    style="stroke-dasharray:276.46; stroke-dashoffset:0;"/>
+            <circle class="focus-ring-bg" cx="50" cy="50" r="44"/>
+            <circle class="focus-ring-progress" id="focus-ring-progress" cx="50" cy="50" r="44"
+                    stroke-dasharray="276.46" stroke-dashoffset="0"/>
           </svg>
           <div class="focus-ring-inner">
             <div id="focus-time-display">25:00</div>
             <div id="focus-phase-label">准备好了吗</div>
+            <div id="focus-session-count">今日 0 个 🍅</div>
           </div>
         </div>
-        <button id="focus-start-btn" data-action="start">▶ 开始专注</button>
-        <div id="focus-session-count">今日完成 0 个 🍅</div>
       </div>
 
-      <!-- AI 感受 -->
       <div class="ai-comment-card">
-        <div class="ai-comment-label">🐻 小熊说</div>
-        <div id="ai-comment">选一个频道，我们一起开始。</div>
+        <span class="ai-comment-label">🐻</span>
+        <div id="ai-comment">选一首歌，我陪你专注。</div>
       </div>
 
-      <!-- 音乐平台选择 -->
       <div class="channel-section">
         <div class="channel-label">音乐来源</div>
         <div class="music-source-row">
@@ -153,13 +258,12 @@
         </div>
       </div>
 
-      <!-- 本地播放器 -->
       <div class="music-player-card" id="local-player-card">
         <div class="music-now-row">
           <div id="track-art">🎵</div>
           <div class="music-info">
             <div id="track-name">点击选择本地音乐</div>
-            <div id="track-artist">支持 MP3 / AAC / OGG</div>
+            <div id="track-artist">支持 MP3 / AAC</div>
           </div>
           <button id="local-pick-btn" class="local-pick-btn">＋</button>
         </div>
@@ -171,12 +275,10 @@
           <button id="music-play-btn">▶</button>
           <button id="music-next-btn">⏭</button>
         </div>
-        <!-- 本地播放列表 -->
         <div id="local-playlist" class="local-playlist"></div>
         <input type="file" id="local-file-input" accept="audio/*" multiple style="display:none">
       </div>
 
-      <!-- YouTube 播放器 -->
       <div class="music-player-card" id="yt-player-card" style="display:none">
         <div class="yt-search-row">
           <input id="yt-search-inp" class="yt-search-inp" placeholder="搜索 YouTube 音乐…">
@@ -188,12 +290,67 @@
         <div id="yt-results" class="yt-results"></div>
       </div>
 
+      <div class="focus-actions">
+        <button id="focus-start-btn" data-action="start">▶ 开始专注</button>
+      </div>
       <div style="height:6px;flex-shrink:0;"></div>
+    </div>
+
+    <!-- 聊天页 -->
+    <div class="page" id="page-chat">
+      <div id="chat-msgs"></div>
+      <div id="chat-foot">
+        <textarea id="chat-inp" rows="1" placeholder="说点什么…"></textarea>
+        <button id="chat-send">➤</button>
+      </div>
+    </div>
+
+    <!-- 更多页 -->
+    <div class="page" id="page-more">
+      <div class="more-header">更多功能</div>
+      <div class="more-grid">
+        <div class="more-item" data-action="notes">
+          <div class="more-icon">📝</div>
+          <div class="more-label">便签</div>
+        </div>
+        <div class="more-item" data-action="game">
+          <div class="more-icon">🎮</div>
+          <div class="more-label">游戏</div>
+        </div>
+        <div class="more-item" data-action="stats">
+          <div class="more-icon">📊</div>
+          <div class="more-label">标签统计</div>
+        </div>
+        <div class="more-item" data-action="backup">
+          <div class="more-icon">☁️</div>
+          <div class="more-label">同步备份</div>
+        </div>
+        <div class="more-item" data-action="weather">
+          <div class="more-icon">🌤</div>
+          <div class="more-label">天气提醒</div>
+        </div>
+        <div class="more-item" data-action="diary">
+          <div class="more-icon">📖</div>
+          <div class="more-label">全部日记</div>
+        </div>
+        <div class="more-item" data-action="music-lib">
+          <div class="more-icon">🎵</div>
+          <div class="more-label">音乐库</div>
+        </div>
+        <div class="more-item" data-action="poke">
+          <div class="more-icon">🐾</div>
+          <div class="more-label">戳克宝</div>
+        </div>
+        <div class="more-item" data-action="about">
+          <div class="more-icon">🌸</div>
+          <div class="more-label">关于绒语</div>
+        </div>
+      </div>
     </div>
 
   </div><!-- /pages -->
 
-  <!-- 底部 Dock（5个按钮）-->
+  <!-- 底部 Dock -->
   <div id="dock">
     <button class="dock-item active" data-page="home">
       <div class="di-icon-wrap">🏠</div>
@@ -203,73 +360,21 @@
       <div class="di-icon-wrap">📝</div>
       <span class="di-label">便签</span>
     </button>
-    <button class="dock-item" data-page="chat">
-      <div class="di-icon-wrap">💬</div>
-      <span class="di-label">聊天</span>
-    </button>
     <button class="dock-item" data-page="focus">
       <div class="di-icon-wrap">🍅</div>
       <span class="di-label">专注</span>
     </button>
-
+    <button class="dock-item" data-page="chat">
+      <div class="di-icon-wrap">💬</div>
+      <span class="di-label">聊天</span>
+    </button>
+    <button class="dock-item" data-page="more">
+      <div class="di-icon-wrap">⋯</div>
+      <span class="di-label">更多</span>
+    </button>
   </div>
 
 </div><!-- /app -->
-
-<!-- 设置弹窗 -->
-<div id="settings-overlay">
-  <div id="settings-box">
-    <h2>🌸 绒语 · 设置</h2>
-
-    <div class="set-label">🐻 他的名字</div>
-    <input class="set-inp" id="s-name" placeholder="陆沉">
-
-    <div class="set-label">🐰 你的名字</div>
-    <input class="set-inp" id="s-uname" placeholder="兔子小姐">
-
-    <div class="set-label">📍 城市（天气）</div>
-    <input class="set-inp" id="s-city" placeholder="上海">
-
-    <div class="set-label">💌 心语库（一行一句，留空用内置）</div>
-    <textarea class="set-txt" id="s-quotes" rows="4"
-              placeholder="每行一条心语…"></textarea>
-
-    <div class="set-label">📝 他的人设</div>
-    <textarea class="set-txt" id="s-profile" rows="2"
-              placeholder="温柔深情，只对你一人放下防备…"></textarea>
-
-    <div class="set-label">🖼 桌面壁纸</div>
-    <div class="wallpaper-row">
-      <button class="wp-btn" id="wp-pick">📷 选择图片</button>
-      <button class="wp-btn wp-clear" id="wp-clear">🌸 恢复默认</button>
-    </div>
-    <div class="wp-preview-wrap">
-      <div id="wp-preview" class="wp-preview"></div>
-      <span id="wp-hint" class="wp-hint">未设置壁纸</span>
-    </div>
-
-    <div class="set-label">🐻 小熊头像图片</div>
-    <div class="avatar-upload-row">
-      <div class="avatar-preview" id="bear-avatar-preview">🐻</div>
-      <button class="wp-btn" id="bear-avatar-btn">选择图片</button>
-      <button class="wp-btn wp-clear" id="bear-avatar-clear">清除</button>
-    </div>
-    <input type="file" id="bear-avatar-input" accept="image/*" style="display:none">
-
-    <div class="set-label">🐰 兔子头像图片</div>
-    <div class="avatar-upload-row">
-      <div class="avatar-preview" id="bunny-avatar-preview">🐰</div>
-      <button class="wp-btn" id="bunny-avatar-btn">选择图片</button>
-      <button class="wp-btn wp-clear" id="bunny-avatar-clear">清除</button>
-    </div>
-    <input type="file" id="bunny-avatar-input" accept="image/*" style="display:none">
-
-    <div class="set-row">
-      <button id="set-save">💾 保存</button>
-      <button id="set-close">取消</button>
-    </div>
-  </div>
-</div>
 
 <!-- 脚本 -->
 <script src="js/utils.js"></script>
@@ -281,33 +386,11 @@
 <script src="js/chat.js"></script>
 <script src="js/focus.js"></script>
 <script src="js/main.js"></script>
-
 <script>
-  // 壁纸按钮
-  document.getElementById('wp-pick').addEventListener('click', () => { tap(); pickWallpaper(); });
-  document.getElementById('wp-clear').addEventListener('click', () => {
-    tap(); clearWallpaper();
-    document.getElementById('wp-preview').style.backgroundImage = '';
-    document.getElementById('wp-hint').textContent = '未设置壁纸';
-  });
-
-  // 设置弹窗打开时同步壁纸预览
-  document.getElementById('menu-btn').addEventListener('click', () => {
-    const saved = Store.get('wallpaper');
-    const prev  = document.getElementById('wp-preview');
-    const hint  = document.getElementById('wp-hint');
-    if (saved) { prev.style.backgroundImage = `url(${saved})`; hint.textContent = '已设置壁纸'; }
-    else       { prev.style.backgroundImage = '';              hint.textContent = '未设置壁纸'; }
-  }, { capture: false });
-
-  // 专注页初始化（切换到该页时触发）
-  // main.js 的 switchPage 会在切换到 focus 时调用
   initApp();
-
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
 </script>
-
 </body>
 </html>

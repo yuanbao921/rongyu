@@ -1,111 +1,179 @@
 /* ============================================================
    style.css — 设计令牌 & 全局重置
-   少女风 iOS 桌面调色板
+   主题色系统：修改这里的变量，整个UI跟着变
    ============================================================ */
 
-/* ---------- 设计令牌 ---------- */
+/* ---------- 默认主题：玫瑰奶茶 ---------- */
 :root {
-  /* 壁纸层（由 wallpaper.js 动态覆盖） */
-  --wallpaper:     none;
+  /* 主色（所有UI高亮都用这个）*/
+  --rose:         #C2827A;
+  --rose-light:   #DEB0AC;
+  --rose-dark:    #A06860;
+  --rose-xlight:  rgba(194,130,122,0.12);
+  --rose-dim:     rgba(194,130,122,0.22);
 
-  /* 奶茶米色基底 */
-  --bg:            #F5EDE4;
-  --bg-tint:       rgba(245, 237, 228, 0.55);
+  /* 背景 */
+  --bg:           #F5EDE4;
+  --bg-mid:       #EFE6DC;
 
-  /* 毛玻璃卡片 */
-  --card:          rgba(255, 252, 248, 0.70);
-  --card-border:   rgba(210, 180, 165, 0.22);
-  --card-border-hi:rgba(210, 180, 165, 0.40);
+  /* 卡片 */
+  --card:         rgba(255, 252, 248, 0.85);
+  --card-border:  rgba(194,130,122,0.15);
+  --card-border-hi: rgba(194,130,122,0.28);
 
-  /* 状态栏 / Dock 毛玻璃 */
-  --glass:         rgba(250, 244, 238, 0.78);
-  --glass-border:  rgba(210, 180, 165, 0.18);
+  /* 毛玻璃 */
+  --glass:        rgba(245, 237, 228, 0.78);
+  --glass-border: rgba(194,130,122,0.12);
 
-  /* 干枯玫瑰点缀色 */
-  --rose:          #C2827A;
-  --rose-light:    #E8C4BC;
-  --rose-xlight:   rgba(232, 196, 188, 0.30);
-  --rose-dark:     #A06060;
+  /* 文字 */
+  --brown:        #4A3832;
+  --brown-light:  #7A6258;
+  --brown-mute:   #B09890;
 
-  /* 深暖棕文字 */
-  --brown:         #3E2E28;
-  --brown-light:   #6E5248;
-  --brown-mute:    #A88878;
+  /* 阴影 */
+  --shadow:       0 4px 20px rgba(120,80,70,0.07);
+  --shadow-hover: 0 8px 32px rgba(120,80,70,0.12);
 
-  /* 柔和阴影 */
-  --shadow:        0 4px 24px rgba(100, 60, 50, 0.08),
-                   0 1px  6px rgba(100, 60, 50, 0.04);
-  --shadow-card:   0 8px 32px rgba(100, 60, 50, 0.10),
-                   0 2px  8px rgba(100, 60, 50, 0.05);
-  --shadow-dock:   0 -2px 20px rgba(100, 60, 50, 0.06),
-                    0 8px 40px rgba(100, 60, 50, 0.10);
+  /* 圆角 */
+  --radius-card:  20px;
+  --radius-btn:   14px;
+  --radius-input: 12px;
+  --radius-dock:  28px;
 
-  /* 圆角 — iOS 风格偏大 */
-  --radius-card:   25px;
-  --radius-btn:    18px;
-  --radius-dock:   32px;
-  --radius-input:  14px;
+  /* 缓动 */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out:    cubic-bezier(0, 0, 0.2, 1);
+}
 
-  /* 过渡曲线 */
-  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-smooth:   cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
+/* ---------- 主题：天空蓝 ---------- */
+[data-theme="blue"] {
+  --rose:        #7A9EC8;
+  --rose-light:  #AACAE0;
+  --rose-dark:   #5A7EA8;
+  --rose-xlight: rgba(122,158,200,0.12);
+  --rose-dim:    rgba(122,158,200,0.22);
+  --bg:          #EDF2F8;
+  --bg-mid:      #E4EBF3;
+  --card:        rgba(240,246,252,0.88);
+  --card-border: rgba(122,158,200,0.15);
+  --card-border-hi: rgba(122,158,200,0.28);
+  --glass:       rgba(237,242,248,0.78);
+  --glass-border: rgba(122,158,200,0.12);
+  --brown:       #2A3848;
+  --brown-light: #5A6878;
+  --brown-mute:  #9AAABB;
+}
+
+/* ---------- 主题：抹茶绿 ---------- */
+[data-theme="green"] {
+  --rose:        #7AAA88;
+  --rose-light:  #AACAB5;
+  --rose-dark:   #5A8A68;
+  --rose-xlight: rgba(122,170,136,0.12);
+  --rose-dim:    rgba(122,170,136,0.22);
+  --bg:          #EDF5EF;
+  --bg-mid:      #E4EEE7;
+  --card:        rgba(240,248,242,0.88);
+  --card-border: rgba(122,170,136,0.15);
+  --card-border-hi: rgba(122,170,136,0.28);
+  --glass:       rgba(237,245,239,0.78);
+  --glass-border: rgba(122,170,136,0.12);
+  --brown:       #283832;
+  --brown-light: #587868;
+  --brown-mute:  #98B0A0;
+}
+
+/* ---------- 主题：棕糖 ---------- */
+[data-theme="brown"] {
+  --rose:        #B89A80;
+  --rose-light:  #D0BAA0;
+  --rose-dark:   #987860;
+  --rose-xlight: rgba(184,154,128,0.12);
+  --rose-dim:    rgba(184,154,128,0.22);
+  --bg:          #F5EEE6;
+  --bg-mid:      #EDE4D8;
+  --card:        rgba(252,248,242,0.88);
+  --card-border: rgba(184,154,128,0.15);
+  --card-border-hi: rgba(184,154,128,0.28);
+  --glass:       rgba(245,238,230,0.78);
+  --glass-border: rgba(184,154,128,0.12);
+  --brown:       #3C2E22;
+  --brown-light: #6C5E52;
+  --brown-mute:  #A89888;
+}
+
+/* ---------- 主题：薰衣草紫 ---------- */
+[data-theme="purple"] {
+  --rose:        #A080C0;
+  --rose-light:  #C0A8D8;
+  --rose-dark:   #8060A0;
+  --rose-xlight: rgba(160,128,192,0.12);
+  --rose-dim:    rgba(160,128,192,0.22);
+  --bg:          #F2EDF8;
+  --bg-mid:      #EAE4F0;
+  --card:        rgba(248,244,252,0.88);
+  --card-border: rgba(160,128,192,0.15);
+  --card-border-hi: rgba(160,128,192,0.28);
+  --glass:       rgba(242,237,248,0.78);
+  --glass-border: rgba(160,128,192,0.12);
+  --brown:       #382848;
+  --brown-light: #685878;
+  --brown-mute:  #A898B8;
+}
+
+/* ---------- 主题：金秋 ---------- */
+[data-theme="gold"] {
+  --rose:        #C8A060;
+  --rose-light:  #DEC090;
+  --rose-dark:   #A88040;
+  --rose-xlight: rgba(200,160,96,0.12);
+  --rose-dim:    rgba(200,160,96,0.22);
+  --bg:          #F8F0E4;
+  --bg-mid:      #F0E8D8;
+  --card:        rgba(252,248,240,0.88);
+  --card-border: rgba(200,160,96,0.15);
+  --card-border-hi: rgba(200,160,96,0.28);
+  --glass:       rgba(248,240,228,0.78);
+  --glass-border: rgba(200,160,96,0.12);
+  --brown:       #3C3020;
+  --brown-light: #6C6050;
+  --brown-mute:  #A89880;
 }
 
 /* ---------- 全局重置 ---------- */
 *, *::before, *::after {
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  /* Noto Sans SC 优先，保证中文优雅 */
-  font-family: 'Noto Sans SC', 'PingFang SC', -apple-system,
-               'Helvetica Neue', sans-serif;
-  background-color: var(--bg);
-  /* 壁纸层叠加在底色上 */
-  background-image: var(--wallpaper);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  font-family: -apple-system, 'PingFang SC', 'Noto Sans SC', 'Helvetica Neue', sans-serif;
+  background: var(--bg);
   color: var(--brown);
   height: 100dvh;
   overflow: hidden;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
-/* ---------- 毛玻璃通用卡片 ---------- */
+/* ---------- 通用卡片 ---------- */
 .card {
   background: var(--card);
-  backdrop-filter: blur(24px) saturate(1.6) brightness(1.05);
-  -webkit-backdrop-filter: blur(24px) saturate(1.6) brightness(1.05);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-card);
-  padding: 18px 20px;
-  margin-bottom: 14px;
-  box-shadow: var(--shadow-card);
-  /* 按压动画 */
-  transition:
-    transform  0.18s var(--ease-spring),
-    box-shadow 0.25s var(--ease-smooth),
-    background 0.2s;
-  cursor: default;
-  will-change: transform;
-}
-.card:active {
-  transform: scale(0.955);
+  padding: 16px 18px;
+  margin-bottom: 10px;
   box-shadow: var(--shadow);
-  background: rgba(255, 252, 248, 0.85);
+  transition: transform 0.2s var(--ease-spring), box-shadow 0.3s, background 0.4s, border-color 0.4s;
 }
+.card:active { transform: scale(0.97); }
 
-/* ---------- 空状态 ---------- */
 .empty-state {
   color: var(--brown-mute);
   text-align: center;
-  padding: 36px 0;
+  padding: 30px 0;
   font-size: 13px;
-  line-height: 2;
-  letter-spacing: 0.3px;
+  line-height: 1.8;
 }

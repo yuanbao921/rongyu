@@ -3,195 +3,86 @@
    ============================================================ */
 
 /* ========== 首页 ========== */
-#page-home {
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
+#page-home { padding-top: 10px; }
 
-/* 上半屏：锁屏时间 */
-.home-lockscreen {
-  flex: 0 0 52%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 20px 20px 10px;
-  background: linear-gradient(
-    180deg,
-    var(--bg) 0%,
-    var(--bg-mid) 100%
-  );
-  position: relative;
-}
-
-.home-big-time {
-  font-size: 72px;
-  font-weight: 100;
-  letter-spacing: -3px;
-  color: var(--brown);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.home-date-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: var(--brown-mute);
-  letter-spacing: 2px;
-}
-
-.home-greeting-sub {
-  font-size: 12px;
-  color: var(--rose);
-  letter-spacing: 1.5px;
-  margin-top: 4px;
-  opacity: 0.8;
-}
-
-/* 下半屏：2×2 卡片网格 */
-.home-grid {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 10px;
-  padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
-  overflow: hidden;
-}
-
-.home-grid-card {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-card);
-  padding: 14px;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.2s var(--ease-spring), background 0.4s, border-color 0.4s;
-  position: relative;
-}
-.home-grid-card:active { transform: scale(0.95); }
-
-.grid-card-label {
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: var(--rose);
-  margin-bottom: 8px;
-  text-transform: uppercase;
+.home-greeting {
+  font-size: 22px;
   font-weight: 500;
-}
-
-/* 心语卡片 */
-#grid-quote {
-  background: linear-gradient(135deg, var(--card) 0%, var(--rose-xlight) 100%);
-}
-.grid-quote-text {
-  font-size: 12px;
-  line-height: 1.8;
+  letter-spacing: 0.8px;
+  margin-bottom: 3px;
   color: var(--brown);
-  flex: 1;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  font-weight: 300;
-  letter-spacing: 0.3px;
 }
-.grid-quote-source {
-  font-size: 10px;
+.home-sub {
+  font-size: 13px;
   color: var(--brown-mute);
-  margin-top: 6px;
-  text-align: right;
-}
-
-/* 纪念日卡片 */
-#grid-anniversary {
-  background: linear-gradient(135deg, var(--rose-xlight) 0%, var(--card) 100%);
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-.anniversary-big-days {
-  font-size: 36px;
-  font-weight: 200;
-  color: var(--rose);
-  line-height: 1;
-  letter-spacing: -1px;
-}
-.anniversary-unit {
-  font-size: 11px;
-  color: var(--brown-mute);
-  letter-spacing: 1px;
-  margin-top: 2px;
-}
-.anniversary-name {
-  font-size: 11px;
-  color: var(--rose-dark);
-  margin-top: 6px;
-  letter-spacing: 1px;
-}
-.anniversary-since {
-  font-size: 10px;
-  color: var(--brown-mute);
-  margin-top: 2px;
-}
-
-/* 日记卡片 */
-#grid-diary {
-  background: var(--card);
-}
-.grid-diary-text {
-  font-size: 11px;
-  line-height: 1.75;
-  color: var(--brown-light);
-  flex: 1;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
-  font-weight: 300;
+  margin-bottom: 16px;
   letter-spacing: 0.3px;
 }
 
-/* 心情卡片 */
-#grid-mood {
-  background: var(--card);
-}
-.grid-mood-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 5px;
-  flex: 1;
-}
-.grid-mood-item {
+/* -- 天气卡片 -- */
+.weather-card {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 6px 4px;
-  border-radius: 10px;
-  border: 1px solid var(--card-border);
-  cursor: pointer;
-  transition: all 0.18s var(--ease-spring);
-  font-size: 16px;
+  gap: 16px;
+  padding: 18px 22px;
+}
+.weather-icon { font-size: 38px; line-height: 1; flex-shrink: 0; }
+.weather-info { flex: 1; }
+.weather-temp { font-size: 28px; font-weight: 300; letter-spacing: -0.5px; }
+.weather-desc { font-size: 13px; color: var(--brown-light); margin-top: 2px; }
+.weather-city { font-size: 11px; color: var(--brown-mute); margin-top: 3px; letter-spacing: 0.3px; }
+
+/* -- 心语卡片 -- */
+.quote-card  { text-align: center; padding: 24px 20px 18px; cursor: pointer; }
+.quote-text  { font-size: 15px; line-height: 2; color: var(--brown); font-weight: 300; letter-spacing: 0.6px; }
+.quote-source { font-size: 12px; color: var(--brown-mute); margin-top: 8px; }
+.quote-hint  { font-size: 10px; color: var(--rose); margin-top: 10px; letter-spacing: 1px; opacity: 0.7; }
+
+/* -- 心情选择器 -- */
+.mood-card  { padding: 16px 18px; }
+.mood-title { font-size: 12px; color: var(--brown-mute); letter-spacing: 1.5px; margin-bottom: 12px; }
+.mood-grid  { display: flex; gap: 8px; flex-wrap: wrap; }
+.mood-item {
+  padding: 7px 15px;
+  border-radius: 40px;
+  font-size: 13px;
+  font-weight: 400;
+  border: 1.5px solid var(--rose-light);
   background: transparent;
-}
-.grid-mood-item:active { transform: scale(0.9); }
-.grid-mood-item.selected {
-  background: var(--rose-xlight);
-  border-color: var(--rose-light);
-}
-.grid-mood-item span {
-  font-size: 9px;
-  color: var(--brown-mute);
+  color: var(--brown-light);
+  cursor: pointer;
+  transition: all 0.22s var(--ease-smooth);
+  flex-shrink: 0;
   letter-spacing: 0.3px;
+}
+.mood-item:active { transform: scale(0.93); }
+.mood-item.selected {
+  background: var(--rose-light);
+  color: var(--brown);
+  border-color: var(--rose);
+}
+
+/* -- 推送 -- */
+.push-card  { padding: 14px 18px; }
+.push-title { font-size: 12px; color: var(--brown-mute); letter-spacing: 1.5px; margin-bottom: 10px; }
+.push-list  { display: flex; flex-direction: column; gap: 2px; }
+.push-item  {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--card-border);
+}
+.push-item:last-child { border-bottom: none; }
+.push-icon  { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.push-text  { font-size: 12px; color: var(--brown-light); flex: 1; line-height: 1.6; }
+.push-time  { font-size: 10px; color: var(--brown-mute); flex-shrink: 0; margin-top: 2px; }
+
+/* ========== 信号图标 ========== */
+.status-signal {
+  font-size: 11px;
+  color: var(--brown-mute);
+  letter-spacing: 1px;
 }
 
 /* ========== 便签页 ========== */
@@ -1330,130 +1221,3 @@
 .yt-result-info { flex: 1; min-width: 0; }
 .yt-result-title { font-size: 12px; color: var(--brown); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .yt-result-channel { font-size: 10px; color: var(--brown-mute); margin-top: 1px; }
-
-/* ============================================================
-   首页新组件：时间大字 / 纪念日 / 日记
-   更多页九宫格
-   ============================================================ */
-
-/* 时间大字 */
-.home-clock-block {
-  text-align: center;
-  padding: 10px 0 6px;
-  flex-shrink: 0;
-}
-.home-big-time {
-  font-size: 52px;
-  font-weight: 200;
-  letter-spacing: -1px;
-  color: var(--brown);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-.home-date-line {
-  font-size: 13px;
-  color: var(--brown-mute);
-  margin-top: 4px;
-  letter-spacing: 1px;
-}
-
-/* 纪念日卡片 */
-.anniversary-card {
-  text-align: center;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, rgba(196,130,122,0.12) 0%, rgba(196,130,122,0.06) 100%);
-  border-color: rgba(196,130,122,0.2);
-}
-.anniversary-label {
-  font-size: 11px;
-  color: var(--rose-dark);
-  letter-spacing: 2px;
-  margin-bottom: 6px;
-}
-.anniversary-days {
-  font-size: 36px;
-  font-weight: 200;
-  color: var(--brown);
-  letter-spacing: -1px;
-  line-height: 1;
-}
-.anniversary-date {
-  font-size: 11px;
-  color: var(--brown-mute);
-  margin-top: 4px;
-  letter-spacing: 0.5px;
-}
-
-/* 日记卡片 */
-.diary-card { padding: 16px 18px; }
-.diary-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-.diary-title {
-  font-size: 12px;
-  color: var(--brown-mute);
-  letter-spacing: 1.5px;
-}
-.diary-refresh-btn {
-  font-size: 11px;
-  color: var(--rose-dark);
-  background: var(--rose-xlight);
-  border: 1px solid var(--rose-light);
-  border-radius: 8px;
-  padding: 3px 10px;
-  cursor: pointer;
-  transition: all 0.18s;
-}
-.diary-refresh-btn:active { background: var(--rose-light); }
-.diary-content {
-  font-size: 13px;
-  color: var(--brown);
-  line-height: 1.9;
-  letter-spacing: 0.5px;
-  font-weight: 300;
-  transition: opacity 0.2s;
-}
-.diary-from {
-  font-size: 11px;
-  color: var(--brown-mute);
-  text-align: right;
-  margin-top: 8px;
-}
-
-/* 更多页 */
-#page-more { padding: 12px 16px; }
-.more-header {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--brown);
-  letter-spacing: 1px;
-  margin-bottom: 16px;
-  flex-shrink: 0;
-}
-.more-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-.more-item {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: 20px;
-  padding: 18px 10px 14px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.18s var(--ease-spring);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-.more-item:active {
-  transform: scale(0.93);
-  background: var(--rose-xlight);
-  border-color: var(--rose-light);
-}
-.more-icon { font-size: 28px; margin-bottom: 6px; }
-.more-label { font-size: 11px; color: var(--brown-mute); letter-spacing: 0.5px; }

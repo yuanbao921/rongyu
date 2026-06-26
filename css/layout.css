@@ -28,24 +28,22 @@
   flex-shrink: 0;
 }
 
-#status-center-info {
+#status-brand {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1px;
+  justify-content: center;
 }
 
-#status-time {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--brown);
-  letter-spacing: 0.5px;
-}
-
-#status-date {
-  font-size: 10px;
-  color: var(--brown-mute);
-  letter-spacing: 0.3px;
+.brand-text {
+  font-family: "Georgia", "Palatino Linotype", "Times New Roman", serif;
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 3px;
+  /* 比主题色浅一点，同色系 */
+  color: var(--rose-light);
+  opacity: 0.85;
+  text-shadow: 0 1px 8px var(--rose-dim);
 }
 
 .status-panel-btn {
