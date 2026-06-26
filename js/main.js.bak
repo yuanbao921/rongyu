@@ -68,6 +68,7 @@ let currentPage  = 'home';
 let isTransiting = false;
 
 function switchPage(id) {
+  alert('点了！目标：' + id);
   if (id === currentPage || isTransiting) return;
   isTransiting = true;
   tap();
