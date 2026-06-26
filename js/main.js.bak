@@ -11,12 +11,8 @@ function updateClock() {
   const dateStr = (n.getMonth()+1) + '月' + n.getDate() + '日 周' + weekStr();
   const timeStr = h + ':' + m;
 
-  const st = document.getElementById('status-time');
-  const sd = document.getElementById('status-date');
   const bt = document.getElementById('home-big-time');
   const bd = document.getElementById('home-big-date');
-  if (st) st.textContent = timeStr;
-  if (sd) sd.textContent = dateStr;
   if (bt) bt.textContent = timeStr;
   if (bd) bd.textContent = dateStr;
 }
@@ -25,10 +21,18 @@ setInterval(updateClock, 10_000);
 
 /* ========== 纪念日 ========== */
 function updateAnniversary() {
-  const dateStr  = Store.get('anniversaryDate', '');
-  const label    = Store.get('anniversaryLabel', '在一起');
-  const card     = document.getElementById('anniversary-card');
-  if (!dateStr || !card) return;
+  const dateStr = Store.get('anniversaryDate', '');
+  const label   = Store.get('anniversaryLabel', '在一起');
+
+  const daysEl  = document.getElementById('anniversary-days');
+  const labelEl = document.getElementById('anniversary-label-display');
+  const dateEl  = document.getElementById('anniversary-date-display');
+
+  if (!dateStr) {
+    if (daysEl)  daysEl.textContent  = '—';
+    if (labelEl) labelEl.textContent = '去设置纪念日';
+    return;
+  }
 
   const start = new Date(dateStr);
   const today = new Date();
@@ -36,11 +40,9 @@ function updateAnniversary() {
   start.setHours(0,0,0,0);
   const days = Math.floor((today - start) / 86400000);
 
-  document.getElementById('anniversary-label-display').textContent = label;
-  document.getElementById('anniversary-days').textContent = '第 ' + days + ' 天';
-  document.getElementById('anniversary-date-display').textContent =
-    (start.getMonth()+1) + '.' + start.getDate();
-  card.style.display = 'flex';
+  if (daysEl)  daysEl.textContent  = days;
+  if (labelEl) labelEl.textContent = label;
+  if (dateEl)  dateEl.textContent  = (start.getMonth()+1) + '.' + start.getDate() + ' 至今';
 }
 
 /* ========== 问候 ========== */
@@ -204,24 +206,36 @@ document.getElementById('refresh-token-btn').addEventListener('click', async () 
 });
 
 /* ========== 主题色 ========== */
+const THEMES = ['rose','blue','green','brown','purple','gold'];
+
 document.querySelectorAll('.theme-chip').forEach(chip => {
   chip.addEventListener('click', () => {
     tap();
     document.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
-    const root = document.documentElement;
-    root.style.setProperty('--rose', chip.dataset.rose);
-    root.style.setProperty('--bg',   chip.dataset.bg);
-    Store.set('themeRose', chip.dataset.rose);
-    Store.set('themeBg',   chip.dataset.bg);
+    const theme = chip.dataset.theme || 'rose';
+    applyTheme(theme);
+    Store.set('theme', theme);
   });
 });
 
+function applyTheme(theme) {
+  const root = document.documentElement;
+  // Remove all theme attributes
+  THEMES.forEach(t => root.removeAttribute('data-theme-' + t));
+  if (theme && theme !== 'rose') {
+    root.setAttribute('data-theme', theme);
+  } else {
+    root.removeAttribute('data-theme');
+  }
+}
+
 function restoreTheme() {
-  const rose = Store.get('themeRose','');
-  const bg   = Store.get('themeBg','');
-  if (rose) document.documentElement.style.setProperty('--rose', rose);
-  if (bg)   document.documentElement.style.setProperty('--bg',   bg);
+  const theme = Store.get('theme', 'rose');
+  applyTheme(theme);
+  document.querySelectorAll('.theme-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.theme === theme);
+  });
 }
 
 /* ========== 壁纸按钮 ========== */
@@ -309,9 +323,10 @@ const MOOD_REPLIES = {
 };
 
 function setupMood() {
-  document.querySelectorAll('.mood-item').forEach(item => {
+  // Support both .mood-item and .grid-mood-item
+  document.querySelectorAll('.mood-item, .grid-mood-item').forEach(item => {
     item.addEventListener('click', () => {
-      document.querySelectorAll('.mood-item').forEach(e => e.classList.remove('selected'));
+      document.querySelectorAll('.mood-item, .grid-mood-item').forEach(e => e.classList.remove('selected'));
       item.classList.add('selected');
       const reply = MOOD_REPLIES[item.dataset.mood] || '我收到了。你的心情，就是我的天气。';
       addPush('🐻', reply);
@@ -398,6 +413,12 @@ async function generateDiary() {
   } catch {
     el2.textContent = '今天想了你很久，却不知道从何说起。';
   }
+}
+
+/* ========== 心语刷新（首页网格）========== */
+function refreshGridQuote() {
+  tap();
+  showRandomQuote();
 }
 
 /* ========== 初始化 ========== */
