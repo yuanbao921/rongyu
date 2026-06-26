@@ -58,25 +58,37 @@
   // ============================================================
   //  1. 开屏页
   // ============================================================
-  function initSplash() {
-    var splash = document.getElementById('splash');
-    if (!splash) return;
-
-    // 恢复头像
-    if (typeof restoreAvatars === 'function') {
-      restoreAvatars();
-    }
-
-    // 点击跳过
-    splash.addEventListener('click', function() {
-      splash.classList.add('hidden');
-    });
-
-    // 3秒后自动消失
-    setTimeout(function() {
-      splash.classList.add('hidden');
-    }, 3000);
+// ============================================================
+//  1. 开屏页（更稳健）
+// ============================================================
+function initSplash() {
+  var splash = document.getElementById('splash');
+  if (!splash) {
+    console.warn('开屏页元素不存在');
+    return;
   }
+
+  // 恢复头像（如果函数存在的话）
+  if (typeof restoreAvatars === 'function') {
+    try {
+      restoreAvatars();
+    } catch (e) {
+      console.warn('restoreAvatars 执行失败:', e);
+    }
+  }
+
+  // 点击跳过
+  splash.addEventListener('click', function() {
+    splash.classList.add('hidden');
+  });
+
+  // 3秒后自动消失
+  setTimeout(function() {
+    splash.classList.add('hidden');
+  }, 3000);
+
+  console.log('开屏页已初始化');
+}
 
   // ============================================================
   //  2. Tab 切换（4 个）
