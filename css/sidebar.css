@@ -1,0 +1,204 @@
+/* ===== 侧滑抽屉 ===== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 280px;
+  max-width: 82vw;
+  z-index: 1000;
+  background: rgba(255, 252, 248, 0.92);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border-right: 1px solid rgba(232, 221, 214, 0.3);
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#sidebar-left { left: 0; border-right: 1px solid rgba(232, 221, 214, 0.3); }
+#sidebar-right { right: 0; border-left: 1px solid rgba(232, 221, 214, 0.3); }
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid rgba(232, 221, 214, 0.3);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+.sidebar-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.sidebar-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px 30px;
+}
+.setting-group {
+  margin-bottom: 20px;
+}
+.setting-group label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+/* 颜色选择器 */
+.color-picker-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.color-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.color-dot.active { border-color: var(--text-primary); }
+.color-dot:active { transform: scale(0.9); }
+/* 开关 */
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  flex-shrink: 0;
+}
+.toggle-switch input { display: none; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #d4c8c0;
+  border-radius: 13px;
+  transition: 0.25s;
+  cursor: pointer;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.25s;
+}
+.toggle-switch input:checked + .toggle-slider {
+  background: var(--rose-light);
+}
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(18px);
+}
+/* 头像上传 */
+.avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.avatar-preview {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--rose-xlight);
+  border: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+.wp-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: 0.2s;
+}
+.wp-btn:active { transform: scale(0.95); background: var(--rose-xlight); }
+.wp-clear { border-color: var(--card-border); }
+/* 纪念日 */
+.anniversary-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.anniversary-row input[type="date"] {
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 6px 10px;
+  font-size: 13px;
+  background: transparent;
+  color: var(--text-primary);
+}
+/* 标签 */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.tag-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--rose-xlight);
+  padding: 4px 10px 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.tag-item .tag-del {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 2px;
+}
+.tag-add-row {
+  display: flex;
+  gap: 6px;
+}
+.tag-add-row input {
+  flex: 1;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: transparent;
+  color: var(--text-primary);
+}
+.tag-add-row button {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: none;
+  background: var(--rose-light);
+  color: var(--text-primary);
+  font-size: 12px;
+  cursor: pointer;
+}
