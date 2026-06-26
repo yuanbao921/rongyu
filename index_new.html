@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0,
+                 user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#F8F4F0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="绒语">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&display=swap">
+  <title>绒语</title>
+  <!-- ====== 样式表 ====== -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <!-- ====== 新增样式（新版架构） ====== -->
+  <link rel="stylesheet" href="css/cards.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/diary.css">
+</head>
+<body>
+
+<!-- ============================================================
+  开屏页（保留，跟随主题色）
+  ============================================================ -->
+<div id="splash">
+  <div class="splash-inner">
+    <div class="splash-avatars">
+      <div class="splash-av" id="splash-av-bear">
+        <img id="splash-img-bear" src="" alt="" style="display:none">
+        <span id="splash-emoji-bear">🐻</span>
+      </div>
+      <div class="splash-av" id="splash-av-bunny">
+        <img id="splash-img-bunny" src="" alt="" style="display:none">
+        <span id="splash-emoji-bunny">🐰</span>
+      </div>
+    </div>
+    <div class="splash-title">绒 语</div>
+    <div class="splash-sub">你在，就够了</div>
+    <div class="splash-en">Rong Yu</div>
+  </div>
+</div>
+
+<!-- ============================================================
+  主应用容器
+  ============================================================ -->
+<div id="app">
+
+  <!-- ========== 顶部状态栏（含左右抽屉入口） ========== -->
+  <header id="app-header">
+    <button id="sidebar-left-btn" class="header-btn" aria-label="个性化设置">☰</button>
+    <div id="header-center">
+      <span id="header-title">绒语</span>
+      <span id="header-en">Rong Yu</span>
+    </div>
+    <button id="sidebar-right-btn" class="header-btn" aria-label="AI配置">⚙️</button>
+  </header>
+
+  <!-- ========== 页面容器（Tab 切换） ========== -->
+  <main id="pages">
+
+    <!-- ===== Tab 1：首页（卡片模式） ===== -->
+    <section class="page active" id="page-home">
+      <div id="home-cards">
+        <!-- 卡片1：纪念日 -->
+        <div class="card memorial-card" id="memorial-card">
+          <div class="card-icon">💕</div>
+          <div class="card-content">
+            <div class="card-label">相遇</div>
+            <div class="card-value" id="memorial-days">第 365 天</div>
+            <div class="card-sub" id="memorial-date">2024年6月26日</div>
+          </div>
+        </div>
+        <!-- 卡片2：心语 -->
+        <div class="card quote-card" id="quote-card">
+          <div class="card-icon">💬</div>
+          <div class="card-content">
+            <div class="card-label">心语</div>
+            <div class="card-value" id="quote-text">「你是我在长夜尽头看见的第一缕光。」</div>
+            <div class="card-sub" id="quote-source">— 陆沉</div>
+          </div>
+        </div>
+        <!-- 卡片3：日记 -->
+        <div class="card diary-card" id="diary-card">
+          <div class="card-icon">📖</div>
+          <div class="card-content">
+            <div class="card-label">小熊日记</div>
+            <div class="card-value" id="diary-preview">她说今天很开心，我也跟着开心了一整天。</div>
+            <div class="card-sub" id="diary-date">2026年6月26日</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Tab 2：专注 ===== -->
+    <section class="page" id="page-focus">
+      <!-- 专注页内容保留，后续移入 focus.js -->
+      <div class="focus-placeholder">
+        <p>🍅 专注页</p>
+        <p style="font-size:12px;color:var(--text-muted);">番茄钟 + 音乐播放器</p>
+      </div>
+    </section>
+
+    <!-- ===== Tab 3：聊天 ===== -->
+    <section class="page" id="page-chat">
+      <div id="chat-msgs"></div>
+      <div id="chat-foot">
+        <textarea id="chat-inp" rows="1" placeholder="说点什么…"></textarea>
+        <button id="chat-send">➤</button>
+      </div>
+    </section>
+
+    <!-- ===== Tab 4：更多 ===== -->
+    <section class="page" id="page-more">
+      <div class="more-header">
+        <span>所有功能</span>
+        <span class="more-en">All Features</span>
+      </div>
+      <div class="more-grid">
+        <div class="more-item" data-action="notes">📝<span>便签</span></div>
+        <div class="more-item" data-action="games">🎮<span>游戏</span></div>
+        <div class="more-item" data-action="tags">🏷️<span>标签</span></div>
+        <div class="more-item" data-action="stats">📊<span>统计</span></div>
+        <div class="more-item" data-action="sync">☁️<span>同步</span></div>
+        <div class="more-item" data-action="backup">📦<span>备份</span></div>
+        <div class="more-item" data-action="weather">🌤️<span>天气</span></div>
+        <div class="more-item" data-action="reminder">🔔<span>提醒</span></div>
+        <div class="more-item" data-action="diary-list">📖<span>全部日记</span></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== 底部导航（4 个 Tab） ========== -->
+  <nav id="bottom-nav">
+    <button class="nav-item active" data-tab="home">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">首页</span>
+    </button>
+    <button class="nav-item" data-tab="focus">
+      <span class="nav-icon">🍅</span>
+      <span class="nav-label">专注</span>
+    </button>
+    <button class="nav-item" data-tab="chat">
+      <span class="nav-icon">💬</span>
+      <span class="nav-label">聊天</span>
+    </button>
+    <button class="nav-item" data-tab="more">
+      <span class="nav-icon">📱</span>
+      <span class="nav-label">更多</span>
+    </button>
+  </nav>
+
+</div><!-- /app -->
+
+<!-- ============================================================
+  日记展开弹窗（信纸风格）
+  ============================================================ -->
+<div id="diary-overlay" style="display:none;">
+  <div id="diary-paper">
+    <button id="diary-close" class="diary-close-btn">✕</button>
+    <div id="diary-header">
+      <span id="diary-full-date">2026年6月26日</span>
+    </div>
+    <div id="diary-body">
+      <p id="diary-full-content">她说今天很开心，我也跟着开心了一整天。她笑起来的时候，我连心跳都变慢了。</p>
+    </div>
+    <div id="diary-footer">
+      <span>—— 小熊 🐻</span>
+    </div>
+    <div id="diary-nav">
+      <button id="diary-prev">‹ 上一页</button>
+      <button id="diary-next">下一页 ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+  左边栏：个性化设置（侧滑抽屉）
+  ============================================================ -->
+<aside id="sidebar-left" class="sidebar" style="transform:translateX(-100%);">
+  <div class="sidebar-header">
+    <span>🌸 个性化</span>
+    <button class="sidebar-close" id="sidebar-left-close">✕</button>
+  </div>
+  <div class="sidebar-body">
+    <!-- 小熊头像 -->
+    <div class="setting-group">
+      <label>🐻 小熊头像</label>
+      <div class="avatar-row">
+        <div class="avatar-preview" id="bear-avatar-preview">🐻</div>
+        <button class="wp-btn" id="bear-avatar-btn">选择图片</button>
+        <button class="wp-btn wp-clear" id="bear-avatar-clear">清除</button>
+      </div>
+      <input type="file" id="bear-avatar-input" accept="image/*" style="display:none">
+    </div>
+    <!-- 兔子头像 -->
+    <div class="setting-group">
+      <label>🐰 兔子头像</label>
+      <div class="avatar-row">
+        <div class="avatar-preview" id="bunny-avatar-preview">🐰</div>
+        <button class="wp-btn" id="bunny-avatar-btn">选择图片</button>
+        <button class="wp-btn wp-clear" id="bunny-avatar-clear">清除</button>
+      </div>
+      <input type="file" id="bunny-avatar-input" accept="image/*" style="display:none">
+    </div>
+    <!-- 主题颜色 -->
+    <div class="setting-group">
+      <label>🎨 主题颜色</label>
+      <div class="color-picker-row" id="theme-color-row">
+        <button class="color-dot" data-color="#F8F4F0" style="background:#F8F4F0;" title="暖灰"></button>
+        <button class="color-dot" data-color="#F2EAE6" style="background:#F2EAE6;" title="玫瑰白"></button>
+        <button class="color-dot" data-color="#F7F3EE" style="background:#F7F3EE;" title="奶油"></button>
+        <button class="color-dot" data-color="#ECEEF0" style="background:#ECEEF0;" title="雾蓝"></button>
+        <button class="color-dot" data-color="#F0ECE6" style="background:#F0ECE6;" title="米白"></button>
+        <button class="color-dot" data-color="#EFE8E4" style="background:#EFE8E4;" title="浅檀"></button>
+      </div>
+    </div>
+    <!-- 壁纸 -->
+    <div class="setting-group">
+      <label>🌸 壁纸</label>
+      <div class="wallpaper-row">
+        <button class="wp-btn" id="wp-pick">📷 选择图片</button>
+        <button class="wp-btn wp-clear" id="wp-clear">恢复默认</button>
+      </div>
+      <div class="wp-preview-wrap">
+        <div id="wp-preview" class="wp-preview"></div>
+        <span id="wp-hint" class="wp-hint">未设置壁纸</span>
+      </div>
+    </div>
+    <!-- 纪念日 -->
+    <div class="setting-group">
+      <label>📅 纪念日</label>
+      <div class="anniversary-row">
+        <span>相遇日：</span>
+        <input type="date" id="anniversary-date" value="2024-06-01">
+      </div>
+    </div>
+    <!-- 标签管理 -->
+    <div class="setting-group">
+      <label>🏷️ 标签管理</label>
+      <div id="tag-list" class="tag-list"></div>
+      <div class="tag-add-row">
+        <input type="text" id="tag-input" placeholder="新增标签..." maxlength="10">
+        <button id="tag-add-btn">添加</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ============================================================
+  右边栏：AI 配置（侧滑抽屉）
+  ============================================================ -->
+<aside id="sidebar-right" class="sidebar" style="transform:translateX(100%);">
+  <div class="sidebar-header">
+    <span>⚙️ AI 配置</span>
+    <button class="sidebar-close" id="sidebar-right-close">✕</button>
+  </div>
+  <div class="sidebar-body">
+    <!-- AI 服务商 -->
+    <div class="setting-group">
+      <label>🤖 AI 服务商</label>
+      <select id="s-ai-provider" class="set-inp">
+        <option value="deepseek">DeepSeek</option>
+        <option value="qwen">通义千问</option>
+        <option value="zhipu">智谱 GLM</option>
+        <option value="openai">OpenAI</option>
+        <option value="moonshot">Moonshot (Kimi)</option>
+      </select>
+    </div>
+    <!-- API Key -->
+    <div class="setting-group">
+      <label>🔑 API Key</label>
+      <input class="set-inp" id="s-api-key" type="password" placeholder="sk-...">
+      <div class="hint">Key 只保存在本地，不会上传</div>
+    </div>
+    <!-- Token 余额 -->
+    <div class="setting-group">
+      <label>📊 Token 余额</label>
+      <div id="token-balance-display">
+        <span id="token-balance-text">点击检查获取</span>
+        <button id="token-check-btn" class="wp-btn">🔄 检查余额</button>
+      </div>
+    </div>
+    <!-- 主动讲话开关 -->
+    <div class="setting-group">
+      <label>💬 主动讲话</label>
+      <div class="toggle-row">
+        <span>开启后小熊会主动找你</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="active-speaking-toggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <!-- 定时设置 -->
+    <div class="setting-group">
+      <label>⏰ 主动讲话间隔（分钟）</label>
+      <input class="set-inp" id="speaking-interval" type="number" value="30" min="0" max="120">
+      <div class="hint">0 表示关闭定时</div>
+    </div>
+    <!-- 日记生成开关 -->
+    <div class="setting-group">
+      <label>📖 自动生成日记</label>
+      <div class="toggle-row">
+        <span>小熊会在有感触时写日记</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="diary-auto-toggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ====== 脚本 ====== -->
+<script src="js/utils.js"></script>
+<script src="js/wallpaper.js"></script>
+<script src="js/animation.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/music.js"></script>
+<script src="js/notes.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/focus.js"></script>
+<script src="js/memory.js"></script>
+<script src="js/diary.js"></script>
+<script src="js/anniversary.js"></script>
+<script src="js/quotes.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+  // ============================================================
+  // 入口：DOM 加载完成后初始化
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // -------- 侧滑抽屉 --------
+    function toggleSidebar(id) {
+      const el = document.getElementById(id);
+      const isOpen = el.style.transform !== 'translateX(-100%)' && el.style.transform !== 'translateX(100%)';
+      el.style.transform = isOpen ? (id === 'sidebar-left' ? 'translateX(-100%)' : 'translateX(100%)');
+      document.getElementById('app').classList.toggle('sidebar-open', !isOpen);
+    }
+
+    document.getElementById('sidebar-left-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleSidebar('sidebar-left');
+    });
+    document.getElementById('sidebar-right-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleSidebar('sidebar-right');
+    });
+    document.getElementById('sidebar-left-close').addEventListener('click', function() {
+      toggleSidebar('sidebar-left');
+    });
+    document.getElementById('sidebar-right-close').addEventListener('click', function() {
+      toggleSidebar('sidebar-right');
+    });
+
+    // 点击背景关闭抽屉
+    document.addEventListener('click', function(e) {
+      const left = document.getElementById('sidebar-left');
+      const right = document.getElementById('sidebar-right');
+      const leftBtn = document.getElementById('sidebar-left-btn');
+      const rightBtn = document.getElementById('sidebar-right-btn');
+      const isLeftOpen = left.style.transform !== 'translateX(-100%)';
+      const isRightOpen = right.style.transform !== 'translateX(100%)';
+      if (isLeftOpen && !left.contains(e.target) && !leftBtn.contains(e.target)) {
+        toggleSidebar('sidebar-left');
+      }
+      if (isRightOpen && !right.contains(e.target) && !rightBtn.contains(e.target)) {
+        toggleSidebar('sidebar-right');
+      }
+    });
+
+    // -------- Tab 切换（4 个） --------
+    const tabs = ['home', 'focus', 'chat', 'more'];
+    const navItems = document.querySelectorAll('.nav-item');
+    const pages = {
+      home: document.getElementById('page-home'),
+      focus: document.getElementById('page-focus'),
+      chat: document.getElementById('page-chat'),
+      more: document.getElementById('page-more')
+    };
+
+    function switchTab(tabId) {
+      // 隐藏所有页面
+      Object.values(pages).forEach(p => p.classList.remove('active'));
+      // 显示目标页面
+      if (pages[tabId]) pages[tabId].classList.add('active');
+      // 更新导航状态
+      navItems.forEach(item => {
+        item.classList.toggle('active', item.dataset.tab === tabId);
+      });
+      // 更新标题
+      const titles = {
+        home: '绒语',
+        focus: '专注',
+        chat: '聊天',
+        more: '更多'
+      };
+      document.getElementById('header-title').textContent = titles[tabId] || '绒语';
+      document.getElementById('header-en').textContent = tabId === 'home' ? 'Rong Yu' : '';
+    }
+
+    navItems.forEach(item => {
+      item.addEventListener('click', function() {
+        switchTab(this.dataset.tab);
+      });
+    });
+
+    // -------- 日记展开 --------
+    const diaryOverlay = document.getElementById('diary-overlay');
+    document.getElementById('diary-card').addEventListener('click', function() {
+      diaryOverlay.style.display = 'flex';
+    });
+    document.getElementById('diary-close').addEventListener('click', function() {
+      diaryOverlay.style.display = 'none';
+    });
+    diaryOverlay.addEventListener('click', function(e) {
+      if (e.target === this) this.style.display = 'none';
+    });
+
+    // -------- 头像上传（复用现有逻辑） --------
+    if (typeof setupAvatarUpload === 'function') {
+      setupAvatarUpload('bear');
+      setupAvatarUpload('bunny');
+    }
+
+    // -------- 主题色切换 --------
+    document.querySelectorAll('.color-dot').forEach(dot => {
+      dot.addEventListener('click', function() {
+        const color = this.dataset.color;
+        document.documentElement.style.setProperty('--bg-primary', color);
+        document.documentElement.style.setProperty('--splash-bg', color);
+        Store.set('themeColor', color);
+        // 更新激活状态
+        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // -------- 壁纸（复用现有逻辑） --------
+    document.getElementById('wp-pick').addEventListener('click', function() {
+      if (typeof pickWallpaper === 'function') pickWallpaper();
+    });
+    document.getElementById('wp-clear').addEventListener('click', function() {
+      if (typeof clearWallpaper === 'function') clearWallpaper();
+      document.getElementById('wp-preview').style.backgroundImage = '';
+      document.getElementById('wp-hint').textContent = '未设置壁纸';
+    });
+
+    // -------- 初始化应用 --------
+    if (typeof initApp === 'function') {
+      initApp();
+    }
+
+    // -------- Service Worker --------
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(function() {});
+    }
+
+  });
+</script>
+
+</body>
+</html>
