@@ -1,43 +1,49 @@
 /* ============================================================
-   style.css — 设计令牌 & 全局重置（壁纸兼容版）
+   style.css — 设计令牌 & 全局重置
+   主题色系统：修改这里的变量，整个UI跟着变
    ============================================================ */
 
 /* ---------- 默认主题：玫瑰奶茶 ---------- */
 :root {
+  /* 主色（所有UI高亮都用这个）*/
   --rose:         #C2827A;
   --rose-light:   #DEB0AC;
   --rose-dark:    #A06860;
   --rose-xlight:  rgba(194,130,122,0.12);
   --rose-dim:     rgba(194,130,122,0.22);
 
+  /* 背景 */
   --bg:           #F5EDE4;
   --bg-mid:       #EFE6DC;
 
-  --card:         rgba(255, 252, 248, 0.78);
+  /* 卡片 */
+  --card:         rgba(255, 252, 248, 0.85);
   --card-border:  rgba(194,130,122,0.15);
   --card-border-hi: rgba(194,130,122,0.28);
 
+  /* 毛玻璃 */
   --glass:        rgba(245, 237, 228, 0.78);
   --glass-border: rgba(194,130,122,0.12);
 
+  /* 文字 */
   --brown:        #4A3832;
   --brown-light:  #7A6258;
   --brown-mute:   #B09890;
 
+  /* 阴影 */
   --shadow:       0 4px 20px rgba(120,80,70,0.07);
   --shadow-hover: 0 8px 32px rgba(120,80,70,0.12);
 
+  /* 圆角 */
   --radius-card:  20px;
   --radius-btn:   14px;
   --radius-input: 12px;
   --radius-dock:  28px;
 
+  /* 缓动 */
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out:    cubic-bezier(0, 0, 0.2, 1);
-
-  /* ---------- 新增：壁纸用背景变量 ---------- */
-  --app-bg: var(--bg);
 }
 
 /* ---------- 主题：天空蓝 ---------- */
@@ -49,7 +55,7 @@
   --rose-dim:    rgba(122,158,200,0.22);
   --bg:          #EDF2F8;
   --bg-mid:      #E4EBF3;
-  --card:        rgba(240,246,252,0.78);
+  --card:        rgba(240,246,252,0.88);
   --card-border: rgba(122,158,200,0.15);
   --card-border-hi: rgba(122,158,200,0.28);
   --glass:       rgba(237,242,248,0.78);
@@ -68,7 +74,7 @@
   --rose-dim:    rgba(122,170,136,0.22);
   --bg:          #EDF5EF;
   --bg-mid:      #E4EEE7;
-  --card:        rgba(240,248,242,0.78);
+  --card:        rgba(240,248,242,0.88);
   --card-border: rgba(122,170,136,0.15);
   --card-border-hi: rgba(122,170,136,0.28);
   --glass:       rgba(237,245,239,0.78);
@@ -87,7 +93,7 @@
   --rose-dim:    rgba(184,154,128,0.22);
   --bg:          #F5EEE6;
   --bg-mid:      #EDE4D8;
-  --card:        rgba(252,248,242,0.78);
+  --card:        rgba(252,248,242,0.88);
   --card-border: rgba(184,154,128,0.15);
   --card-border-hi: rgba(184,154,128,0.28);
   --glass:       rgba(245,238,230,0.78);
@@ -106,7 +112,7 @@
   --rose-dim:    rgba(160,128,192,0.22);
   --bg:          #F2EDF8;
   --bg-mid:      #EAE4F0;
-  --card:        rgba(248,244,252,0.78);
+  --card:        rgba(248,244,252,0.88);
   --card-border: rgba(160,128,192,0.15);
   --card-border-hi: rgba(160,128,192,0.28);
   --glass:       rgba(242,237,248,0.78);
@@ -125,7 +131,7 @@
   --rose-dim:    rgba(200,160,96,0.22);
   --bg:          #F8F0E4;
   --bg-mid:      #F0E8D8;
-  --card:        rgba(252,248,240,0.78);
+  --card:        rgba(252,248,240,0.88);
   --card-border: rgba(200,160,96,0.15);
   --card-border-hi: rgba(200,160,96,0.28);
   --glass:       rgba(248,240,228,0.78);
@@ -141,7 +147,6 @@
   box-sizing: border-box;
 }
 
-/* ---------- body：壁纸/主题色的承载层 ---------- */
 body {
   font-family: -apple-system, 'PingFang SC', 'Noto Sans SC', 'Helvetica Neue', sans-serif;
   background: var(--bg);
@@ -153,42 +158,9 @@ body {
   transition: background 0.4s ease, color 0.4s ease;
 }
 
-/* ---------- #app：占满全屏，背景透明 ---------- */
-#app {
-  height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  background: transparent;  /* ← 关键：透明，露出 body 的壁纸/主题色 */
-  overflow: hidden;
-}
-
-/* ---------- 所有页面默认透明，露出壁纸 ---------- */
-.page {
-  display: none;
-  flex: 1;
-  flex-direction: column;
-  background: transparent;  /* ← 关键：透明 */
-  overflow-y: auto;
-  padding: 0 16px 8px;
-}
-
-.page.active {
-  display: flex;
-}
-
-/* ---------- 首页：透明，露出壁纸 ---------- */
-#page-home {
-  padding: 0;
-  flex-direction: column;
-  overflow: hidden;
-  background: transparent;  /* ← 关键：透明，露出壁纸 */
-}
-
-/* ---------- 卡片：半透明毛玻璃，透出壁纸 ---------- */
+/* ---------- 通用卡片 ---------- */
 .card {
   background: var(--card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-card);
   padding: 16px 18px;
@@ -205,3 +177,18 @@ body {
   font-size: 13px;
   line-height: 1.8;
 }
+
+/* ============================================================
+   首页：锁屏大字时间
+   ============================================================ */
+.home-big-time {
+  font-size: 72px;
+  font-weight: 300;
+  letter-spacing: 4px;
+  color: var(--brown);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* 其他首页样式保留（由 layout.css 或 components.css 提供） */
