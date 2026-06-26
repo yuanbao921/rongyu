@@ -10,58 +10,65 @@
   overflow: hidden;
 }
 
-/* 上半屏：锁屏时间 */
+/* 上半屏：锁屏时间 — 约1/3屏 */
 .home-lockscreen {
-  flex: 0 0 52%;
+  flex: 0 0 34%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 20px 20px 10px;
-  background: linear-gradient(
-    180deg,
-    var(--bg) 0%,
-    var(--bg-mid) 100%
-  );
+  padding: 16px 20px 8px;
+  background: var(--bg);
   position: relative;
 }
 
+/* 立体艺术时间字 */
 .home-big-time {
-  font-size: 72px;
-  font-weight: 100;
+  font-size: 76px;
+  font-weight: 700;
   letter-spacing: -3px;
-  color: var(--brown);
   line-height: 1;
   font-variant-numeric: tabular-nums;
+  /* 同色系深色 + 多层text-shadow做立体感 */
+  color: var(--rose-dark);
+  text-shadow:
+    0 1px 0 rgba(0,0,0,0.08),
+    0 2px 0 rgba(0,0,0,0.06),
+    0 3px 0 rgba(0,0,0,0.04),
+    0 4px 8px rgba(0,0,0,0.10),
+    1px 1px 0 var(--rose-dim),
+    -1px -1px 0 rgba(255,255,255,0.4);
+  filter: drop-shadow(0 4px 12px var(--rose-dim));
 }
 
 .home-date-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--brown-mute);
   letter-spacing: 2px;
 }
 
 .home-greeting-sub {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--rose);
   letter-spacing: 1.5px;
-  margin-top: 4px;
+  margin-top: 2px;
   opacity: 0.8;
 }
 
-/* 下半屏：2×2 卡片网格 */
+/* 下半屏：2×2 卡片网格 — 约2/3屏 */
 .home-grid {
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: 10px;
-  padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+  padding: 8px 14px 10px;
   overflow: hidden;
+  background: var(--bg);
 }
 
 .home-grid-card {
@@ -74,7 +81,11 @@
   flex-direction: column;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.2s var(--ease-spring), background 0.4s, border-color 0.4s;
+  /* 主题色平滑过渡 */
+  transition: transform 0.2s var(--ease-spring),
+              background 0.4s ease,
+              border-color 0.4s ease,
+              box-shadow 0.4s ease;
   position: relative;
 }
 .home-grid-card:active { transform: scale(0.95); }
@@ -91,6 +102,7 @@
 /* 心语卡片 */
 #grid-quote {
   background: linear-gradient(135deg, var(--card) 0%, var(--rose-xlight) 100%);
+  transition: background 0.4s ease;
 }
 .grid-quote-text {
   font-size: 12px;

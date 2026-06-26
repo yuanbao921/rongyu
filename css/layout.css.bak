@@ -316,6 +316,7 @@
   flex: 1;
   position: relative;
   overflow: hidden;
+  z-index: 10;
 }
 
 .page {
@@ -342,6 +343,8 @@
   border-radius: var(--radius-dock);
   border: 1px solid var(--glass-border);
   box-shadow: 0 4px 30px rgba(120, 80, 70, 0.08);
+  position: relative;
+  z-index: 100;
 }
 
 .dock-item {
