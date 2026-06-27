@@ -24,24 +24,59 @@
     }
 
     .game-wrapper {
-      width: 94%;
-      max-width: 400px;
-      background: rgba(255, 252, 248, 0.55);
-      backdrop-filter: blur(24px) saturate(1.4);
-      -webkit-backdrop-filter: blur(24px) saturate(1.4);
-      border-radius: 28px;
-      padding: 16px 16px 20px;
-      border: 1px solid rgba(194, 130, 122, 0.10);
-      box-shadow: 0 8px 40px rgba(90, 74, 58, 0.06);
-      text-align: center;
+      width: 96%;
+      max-width: 440px;
+      background: rgba(255, 252, 248, 0.50);
+      backdrop-filter: blur(28px) saturate(1.4);
+      -webkit-backdrop-filter: blur(28px) saturate(1.4);
+      border-radius: 36px;
+      padding: 20px 18px 24px;
+      border: 1px solid rgba(194, 130, 122, 0.08);
+      box-shadow: 0 8px 48px rgba(90, 74, 58, 0.05);
+      position: relative;
     }
 
-    .game-title {
+    /* ---------- 装饰花纹 ---------- */
+    .game-wrapper::before {
+      content: '✦ ✦ ✦';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      letter-spacing: 12px;
+      color: rgba(194, 130, 122, 0.08);
+    }
+
+    .game-wrapper::after {
+      content: '◈ ◈ ◈';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 8px;
+      letter-spacing: 10px;
+      color: rgba(194, 130, 122, 0.06);
+    }
+
+    .corner-deco {
+      position: absolute;
       font-size: 12px;
-      color: rgba(90, 74, 58, 0.30);
-      letter-spacing: 4px;
-      margin-bottom: 8px;
+      color: rgba(194, 130, 122, 0.06);
+      pointer-events: none;
+    }
+    .corner-deco.tl { top: 8px; left: 12px; }
+    .corner-deco.tr { top: 8px; right: 12px; }
+    .corner-deco.bl { bottom: 8px; left: 12px; }
+    .corner-deco.br { bottom: 8px; right: 12px; }
+
+    .game-title {
+      font-size: 13px;
+      color: rgba(90, 74, 58, 0.25);
+      letter-spacing: 6px;
+      margin-bottom: 10px;
       font-weight: 300;
+      text-align: center;
     }
 
     /* ---------- 画布 ---------- */
@@ -49,24 +84,25 @@
       display: block;
       width: 100%;
       aspect-ratio: 1 / 1;
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 18px;
-      border: 1px solid rgba(194, 130, 122, 0.06);
+      background: rgba(255, 255, 255, 0.10);
+      border-radius: 20px;
+      border: 1px solid rgba(194, 130, 122, 0.05);
       touch-action: none;
       cursor: pointer;
+      box-shadow: inset 0 2px 20px rgba(90, 74, 58, 0.02);
     }
 
-    /* ---------- 得分 & 消息 ---------- */
+    /* ---------- 画布下方：得分 + 消息 ---------- */
     .game-info {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-top: 12px;
-      padding: 0 2px;
+      padding: 0 4px;
     }
 
     .score {
-      font-size: 14px;
+      font-size: 15px;
       color: var(--brown, #4A3832);
       font-weight: 400;
       letter-spacing: 0.5px;
@@ -79,85 +115,50 @@
     .message-box {
       flex: 1;
       text-align: right;
-      font-size: 12px;
+      font-size: 13px;
       color: var(--rose, #C2827A);
       font-weight: 350;
       letter-spacing: 0.3px;
       min-height: 1.5em;
-      transition: opacity 0.25s;
       font-style: italic;
       padding-left: 8px;
     }
 
-    /* ---------- 游戏机方向键 ---------- */
-    .dpad {
+    /* ---------- 游戏机方向键 + 控制按钮（同一行） ---------- */
+    .game-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 10px;
+    }
+
+    /* 左侧按钮组（开始 / 重来） */
+    .action-group {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      margin-top: 14px;
-      gap: 6px;
-      user-select: none;
-    }
-
-    .dpad-row {
-      display: flex;
-      gap: 6px;
-      justify-content: center;
-    }
-
-    .dpad-btn {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      border: 1px solid rgba(194, 130, 122, 0.10);
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      font-size: 22px;
-      color: var(--brown, #4A3832);
-      cursor: pointer;
-      transition: all 0.12s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      touch-action: none;
-      box-shadow: 0 2px 8px rgba(90, 74, 58, 0.02);
-    }
-
-    .dpad-btn:active {
-      transform: scale(0.88);
-      background: rgba(194, 130, 122, 0.08);
-      border-color: rgba(194, 130, 122, 0.15);
-    }
-
-    .dpad-btn.empty {
-      visibility: hidden;
-    }
-
-    /* ---------- 控制按钮 ---------- */
-    .game-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 12px;
+      gap: 8px;
+      flex-shrink: 0;
     }
 
     .btn {
-      padding: 7px 22px;
+      padding: 8px 14px;
       border-radius: 40px;
-      border: 1px solid rgba(194, 130, 122, 0.12);
-      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(194, 130, 122, 0.10);
+      background: rgba(255, 255, 255, 0.20);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       font-size: 12px;
       color: var(--brown, #4A3832);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.18s;
       font-family: inherit;
       letter-spacing: 0.5px;
+      white-space: nowrap;
+      min-width: 56px;
     }
     .btn:active {
-      transform: scale(0.94);
+      transform: scale(0.92);
       background: rgba(194, 130, 122, 0.06);
     }
 
@@ -170,35 +171,103 @@
       background: var(--rose-dark, #A06860);
     }
 
-    .back-link {
-      display: inline-block;
-      margin-top: 10px;
-      font-size: 11px;
-      color: rgba(90, 74, 58, 0.20);
-      text-decoration: none;
-      letter-spacing: 1px;
-      border-bottom: 1px solid rgba(194, 130, 122, 0.04);
-      padding-bottom: 2px;
-    }
-    .back-link:active {
-      color: rgba(90, 74, 58, 0.4);
+    /* ---------- 方向键（放大版） ---------- */
+    .dpad {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      user-select: none;
     }
 
-    @media (max-width: 400px) {
+    .dpad-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .dpad-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      border: 1px solid rgba(194, 130, 122, 0.08);
+      background: rgba(255, 255, 255, 0.20);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      font-size: 26px;
+      color: var(--brown, #4A3832);
+      cursor: pointer;
+      transition: all 0.12s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: none;
+      box-shadow: 0 2px 12px rgba(90, 74, 58, 0.02);
+    }
+
+    .dpad-btn:active {
+      transform: scale(0.86);
+      background: rgba(194, 130, 122, 0.08);
+      border-color: rgba(194, 130, 122, 0.12);
+    }
+
+    .dpad-btn.empty {
+      visibility: hidden;
+    }
+
+    /* 小屏适配 */
+    @media (max-width: 420px) {
       .dpad-btn {
-        width: 50px;
-        height: 50px;
+        width: 56px;
+        height: 56px;
+        font-size: 22px;
+      }
+      .btn {
+        font-size: 11px;
+        padding: 6px 12px;
+        min-width: 48px;
+      }
+      .game-wrapper { padding: 14px 12px 16px; }
+      .score { font-size: 13px; }
+      .message-box { font-size: 12px; }
+    }
+
+    @media (max-width: 360px) {
+      .dpad-btn {
+        width: 48px;
+        height: 48px;
         font-size: 19px;
       }
-      .game-wrapper { padding: 12px 12px 16px; }
-      .score { font-size: 12px; }
-      .message-box { font-size: 11px; }
+      .game-wrapper { padding: 10px 10px 14px; }
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 11px;
+      color: rgba(90, 74, 58, 0.15);
+      text-decoration: none;
+      letter-spacing: 1px;
+      border-bottom: 1px solid rgba(194, 130, 122, 0.03);
+      padding-bottom: 2px;
+      text-align: center;
+      width: 100%;
+    }
+    .back-link:active {
+      color: rgba(90, 74, 58, 0.30);
     }
   </style>
 </head>
 <body>
 
 <div class="game-wrapper">
+  <!-- 装饰角 -->
+  <span class="corner-deco tl">✦</span>
+  <span class="corner-deco tr">✦</span>
+  <span class="corner-deco bl">✦</span>
+  <span class="corner-deco br">✦</span>
+
   <div class="game-title">✦ 小 兔 子 吃 胡 萝 卜 ✦</div>
 
   <canvas id="gameCanvas" width="400" height="400"></canvas>
@@ -208,23 +277,25 @@
     <div class="message-box" id="messageBox">点「开始」喂兔子</div>
   </div>
 
-  <!-- 游戏机方向键 -->
-  <div class="dpad">
-    <div class="dpad-row">
-      <div class="dpad-btn empty"></div>
-      <button class="dpad-btn" id="btnUp">⬆</button>
-      <div class="dpad-btn empty"></div>
+  <!-- 控制区：左侧按钮 + 右侧方向键 -->
+  <div class="game-controls">
+    <div class="action-group">
+      <button class="btn btn-primary" id="startBtn">▶ 开始</button>
+      <button class="btn" id="restartBtn">🔄 重来</button>
     </div>
-    <div class="dpad-row">
-      <button class="dpad-btn" id="btnLeft">⬅</button>
-      <button class="dpad-btn" id="btnDown">⬇</button>
-      <button class="dpad-btn" id="btnRight">➡</button>
-    </div>
-  </div>
 
-  <div class="game-actions">
-    <button class="btn" id="restartBtn">🔄 重来</button>
-    <button class="btn btn-primary" id="startBtn">▶ 开始</button>
+    <div class="dpad">
+      <div class="dpad-row">
+        <div class="dpad-btn empty"></div>
+        <button class="dpad-btn" id="btnUp">⬆</button>
+        <div class="dpad-btn empty"></div>
+      </div>
+      <div class="dpad-row">
+        <button class="dpad-btn" id="btnLeft">⬅</button>
+        <button class="dpad-btn" id="btnDown">⬇</button>
+        <button class="dpad-btn" id="btnRight">➡</button>
+      </div>
+    </div>
   </div>
 
   <a class="back-link" href="index.html">← 回 绒 语</a>
@@ -232,9 +303,7 @@
 
 <script>
   // ============================================================
-  //  小兔子吃胡萝卜 · 陆沉版
-  //  兔子 = 🐇 头部 + 粉色圆点身体 · 食物 = 🥕
-  //  方向键控制，保留滑动辅助
+  //  小兔子吃胡萝卜 · 陆沉版（大图标 + 大方向键）
   // ============================================================
 
   const canvas = document.getElementById('gameCanvas');
@@ -242,7 +311,7 @@
   const scoreDisplay = document.getElementById('scoreDisplay');
   const messageBox = document.getElementById('messageBox');
 
-  const GRID_SIZE = 20;
+  const GRID_SIZE = 18;          // 18×18 网格，格子更大
   const CELL_SIZE = canvas.width / GRID_SIZE;
 
   // ---------- 状态 ----------
@@ -254,7 +323,7 @@
   let gameRunning = false;
   let gameOver = false;
   let gameLoop = null;
-  let speed = 130;
+  let speed = 140;
 
   // ---------- 陆沉语录 ----------
   const LUCHEN_SAYS = [
@@ -268,6 +337,8 @@
     '吃完了还有，我一直在。',
     '看小兔子吃饭，是我最幸福的事。',
     '胡萝卜是我的心，你要好好吃掉它。',
+    '你一口，我一口，日子就甜了。',
+    '小馋兔，连胡萝卜都不放过吗？',
   ];
 
   // ---------- 初始化 ----------
@@ -288,7 +359,7 @@
   }
 
   function spawnFood() {
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 2000; i++) {
       const fx = Math.floor(Math.random() * GRID_SIZE);
       const fy = Math.floor(Math.random() * GRID_SIZE);
       if (!snake.some(seg => seg.x === fx && seg.y === fy)) {
@@ -323,7 +394,6 @@
     let newSnake = [newHead, ...snake];
     if (!isEating) newSnake.pop();
 
-    // 碰撞检测
     const headCollision =
       newHead.x < 0 || newHead.x >= GRID_SIZE ||
       newHead.y < 0 || newHead.y >= GRID_SIZE ||
@@ -361,7 +431,7 @@
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 毛玻璃网格
+    // 毛玻璃网格（更淡）
     ctx.strokeStyle = 'rgba(194, 130, 122, 0.04)';
     ctx.lineWidth = 0.5;
     for (let i = 0; i <= GRID_SIZE; i++) {
@@ -375,10 +445,10 @@
       ctx.stroke();
     }
 
-    // 食物：🥕
+    // 食物：🥕（放大）
     const fx = food.x * CELL_SIZE + CELL_SIZE / 2;
     const fy = food.y * CELL_SIZE + CELL_SIZE / 2;
-    ctx.font = `${CELL_SIZE * 0.7}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
+    ctx.font = `${CELL_SIZE * 0.85}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('🥕', fx, fy + 1);
@@ -387,28 +457,28 @@
     snake.forEach((seg, index) => {
       const x = seg.x * CELL_SIZE + CELL_SIZE / 2;
       const y = seg.y * CELL_SIZE + CELL_SIZE / 2;
-      const radius = CELL_SIZE * 0.36;
+      const radius = CELL_SIZE * 0.38;
 
       if (index === 0) {
-        // 头部：兔子 emoji
-        ctx.font = `${CELL_SIZE * 0.65}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
+        // 头部：兔子 emoji（放大）
+        ctx.font = `${CELL_SIZE * 0.78}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('🐇', x, y + 1);
       } else {
-        // 身体：粉色渐变圆点
+        // 身体：粉色渐变圆点（更明显）
         const alpha = 0.6 + 0.4 * (1 - index / snake.length);
         const gradient = ctx.createRadialGradient(
           x - radius * 0.2, y - radius * 0.2, radius * 0.1,
           x, y, radius
         );
-        gradient.addColorStop(0, `rgba(230, 180, 180, ${alpha})`);
-        gradient.addColorStop(1, `rgba(200, 150, 150, ${alpha * 0.85})`);
+        gradient.addColorStop(0, `rgba(235, 185, 185, ${alpha})`);
+        gradient.addColorStop(1, `rgba(200, 150, 150, ${alpha * 0.8})`);
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, Math.PI * 2);
         ctx.fillStyle = gradient;
         ctx.fill();
-        ctx.shadowColor = 'rgba(194, 130, 122, 0.04)';
+        ctx.shadowColor = 'rgba(194, 130, 122, 0.03)';
         ctx.shadowBlur = 4;
         ctx.fill();
         ctx.shadowBlur = 0;
@@ -443,7 +513,7 @@
   document.getElementById('btnLeft').addEventListener('click', () => setDirection(-1, 0));
   document.getElementById('btnRight').addEventListener('click', () => setDirection(1, 0));
 
-  // 滑动辅助
+  // 滑动辅助（保留）
   let touchStart = null;
   canvas.addEventListener('touchstart', (e) => {
     const touch = e.touches[0];
@@ -471,7 +541,7 @@
     initGame();
     gameRunning = true;
     gameOver = false;
-    speed = 130;
+    speed = 140;
     gameLoop = setInterval(moveSnake, speed);
     messageBox.textContent = '🐇 小兔子出发啦';
     draw();
@@ -484,7 +554,7 @@
     initGame();
     gameRunning = false;
     gameOver = false;
-    speed = 130;
+    speed = 140;
     messageBox.textContent = '点「开始」喂兔子';
     draw();
   });
@@ -493,9 +563,6 @@
   initGame();
   draw();
   messageBox.textContent = '点「开始」喂兔子';
-
-  // ---------- 如果从更多页跳过来，提供返回 ----------
-  console.log('🐇 小兔子吃胡萝卜 · 陆沉版已加载');
 </script>
 
 </body>
