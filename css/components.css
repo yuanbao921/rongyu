@@ -7,6 +7,8 @@
   padding: 0;
   flex-direction: column;
   overflow: hidden;
+  background: transparent;
+  /* display 由 .page / .page.active 控制，不在这里设置 */
 }
 
 /* 上半屏：锁屏时间 — 约1/3屏 */
@@ -74,7 +76,7 @@
   gap: 10px;
   padding: 8px 14px 10px;
   overflow: hidden;
-  background: var(--bg);
+  background: transparent;
 }
 
 .home-grid-card {

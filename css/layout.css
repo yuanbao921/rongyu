@@ -326,10 +326,11 @@
   flex-direction: column;
   -webkit-overflow-scrolling: touch;
   opacity: 1;
+  background: transparent;
   transition: opacity 0.25s ease;
 }
-.page.active  { display: flex; opacity: 1; }
-.page.leaving { display: flex; opacity: 0; pointer-events: none; }
+.page.active  { display: flex !important; opacity: 1; }
+.page.leaving { display: flex !important; opacity: 0; pointer-events: none; }
 .page::-webkit-scrollbar { width: 0; }
 
 /* ---------- 底部 Dock ---------- */
