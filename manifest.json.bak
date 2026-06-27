@@ -2,7 +2,7 @@
   "name": "绒语",
   "short_name": "绒语",
   "description": "一款情感陪伴 PWA",
-  "start_url": "/rongyu/index.html"
+  "start_url": "/index.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#F7F0EB",
