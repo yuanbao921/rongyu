@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>🐇 小兔子吃胡萝卜 · 陆沉</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif;
+      background: var(--bg, #F5EDE4);
+      height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: background 0.4s;
+    }
+
+    .game-wrapper {
+      width: 94%;
+      max-width: 400px;
+      background: rgba(255, 252, 248, 0.55);
+      backdrop-filter: blur(24px) saturate(1.4);
+      -webkit-backdrop-filter: blur(24px) saturate(1.4);
+      border-radius: 28px;
+      padding: 16px 16px 20px;
+      border: 1px solid rgba(194, 130, 122, 0.10);
+      box-shadow: 0 8px 40px rgba(90, 74, 58, 0.06);
+      text-align: center;
+    }
+
+    .game-title {
+      font-size: 12px;
+      color: rgba(90, 74, 58, 0.30);
+      letter-spacing: 4px;
+      margin-bottom: 8px;
+      font-weight: 300;
+    }
+
+    /* ---------- 画布 ---------- */
+    canvas {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      border: 1px solid rgba(194, 130, 122, 0.06);
+      touch-action: none;
+      cursor: pointer;
+    }
+
+    /* ---------- 得分 & 消息 ---------- */
+    .game-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      padding: 0 2px;
+    }
+
+    .score {
+      font-size: 14px;
+      color: var(--brown, #4A3832);
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+    .score span {
+      font-weight: 300;
+      color: var(--rose, #C2827A);
+    }
+
+    .message-box {
+      flex: 1;
+      text-align: right;
+      font-size: 12px;
+      color: var(--rose, #C2827A);
+      font-weight: 350;
+      letter-spacing: 0.3px;
+      min-height: 1.5em;
+      transition: opacity 0.25s;
+      font-style: italic;
+      padding-left: 8px;
+    }
+
+    /* ---------- 游戏机方向键 ---------- */
+    .dpad {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 14px;
+      gap: 6px;
+      user-select: none;
+    }
+
+    .dpad-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .dpad-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: 1px solid rgba(194, 130, 122, 0.10);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      font-size: 22px;
+      color: var(--brown, #4A3832);
+      cursor: pointer;
+      transition: all 0.12s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: none;
+      box-shadow: 0 2px 8px rgba(90, 74, 58, 0.02);
+    }
+
+    .dpad-btn:active {
+      transform: scale(0.88);
+      background: rgba(194, 130, 122, 0.08);
+      border-color: rgba(194, 130, 122, 0.15);
+    }
+
+    .dpad-btn.empty {
+      visibility: hidden;
+    }
+
+    /* ---------- 控制按钮 ---------- */
+    .game-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .btn {
+      padding: 7px 22px;
+      border-radius: 40px;
+      border: 1px solid rgba(194, 130, 122, 0.12);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      font-size: 12px;
+      color: var(--brown, #4A3832);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      letter-spacing: 0.5px;
+    }
+    .btn:active {
+      transform: scale(0.94);
+      background: rgba(194, 130, 122, 0.06);
+    }
+
+    .btn-primary {
+      background: var(--rose, #C2827A);
+      color: #fff;
+      border-color: var(--rose, #C2827A);
+    }
+    .btn-primary:active {
+      background: var(--rose-dark, #A06860);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      color: rgba(90, 74, 58, 0.20);
+      text-decoration: none;
+      letter-spacing: 1px;
+      border-bottom: 1px solid rgba(194, 130, 122, 0.04);
+      padding-bottom: 2px;
+    }
+    .back-link:active {
+      color: rgba(90, 74, 58, 0.4);
+    }
+
+    @media (max-width: 400px) {
+      .dpad-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 19px;
+      }
+      .game-wrapper { padding: 12px 12px 16px; }
+      .score { font-size: 12px; }
+      .message-box { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="game-wrapper">
+  <div class="game-title">✦ 小 兔 子 吃 胡 萝 卜 ✦</div>
+
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+  <div class="game-info">
+    <div class="score">🥕 <span id="scoreDisplay">0</span></div>
+    <div class="message-box" id="messageBox">点「开始」喂兔子</div>
+  </div>
+
+  <!-- 游戏机方向键 -->
+  <div class="dpad">
+    <div class="dpad-row">
+      <div class="dpad-btn empty"></div>
+      <button class="dpad-btn" id="btnUp">⬆</button>
+      <div class="dpad-btn empty"></div>
+    </div>
+    <div class="dpad-row">
+      <button class="dpad-btn" id="btnLeft">⬅</button>
+      <button class="dpad-btn" id="btnDown">⬇</button>
+      <button class="dpad-btn" id="btnRight">➡</button>
+    </div>
+  </div>
+
+  <div class="game-actions">
+    <button class="btn" id="restartBtn">🔄 重来</button>
+    <button class="btn btn-primary" id="startBtn">▶ 开始</button>
+  </div>
+
+  <a class="back-link" href="index.html">← 回 绒 语</a>
+</div>
+
+<script>
+  // ============================================================
+  //  小兔子吃胡萝卜 · 陆沉版
+  //  兔子 = 🐇 头部 + 粉色圆点身体 · 食物 = 🥕
+  //  方向键控制，保留滑动辅助
+  // ============================================================
+
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const scoreDisplay = document.getElementById('scoreDisplay');
+  const messageBox = document.getElementById('messageBox');
+
+  const GRID_SIZE = 20;
+  const CELL_SIZE = canvas.width / GRID_SIZE;
+
+  // ---------- 状态 ----------
+  let snake = [];
+  let direction = { dx: 1, dy: 0 };
+  let nextDirection = { dx: 1, dy: 0 };
+  let food = { x: 8, y: 10 };
+  let score = 0;
+  let gameRunning = false;
+  let gameOver = false;
+  let gameLoop = null;
+  let speed = 130;
+
+  // ---------- 陆沉语录 ----------
+  const LUCHEN_SAYS = [
+    '小兔子慢慢吃，我等你。',
+    '胡萝卜甜不甜？你尝了就是我的答案。',
+    '你吃胡萝卜的样子，一定很可爱。',
+    '我种的胡萝卜，只给你一个人吃。',
+    '慢点吃，别噎着。我在呢。',
+    '每一口都是甜的，因为是你吃的。',
+    '小兔子，你比胡萝卜甜多了。',
+    '吃完了还有，我一直在。',
+    '看小兔子吃饭，是我最幸福的事。',
+    '胡萝卜是我的心，你要好好吃掉它。',
+  ];
+
+  // ---------- 初始化 ----------
+  function initGame() {
+    const mid = Math.floor(GRID_SIZE / 2);
+    snake = [
+      { x: mid, y: mid },
+      { x: mid - 1, y: mid },
+      { x: mid - 2, y: mid }
+    ];
+    direction = { dx: 1, dy: 0 };
+    nextDirection = { dx: 1, dy: 0 };
+    score = 0;
+    gameOver = false;
+    scoreDisplay.textContent = '0';
+    spawnFood();
+    messageBox.textContent = '点「开始」喂兔子';
+  }
+
+  function spawnFood() {
+    for (let i = 0; i < 1000; i++) {
+      const fx = Math.floor(Math.random() * GRID_SIZE);
+      const fy = Math.floor(Math.random() * GRID_SIZE);
+      if (!snake.some(seg => seg.x === fx && seg.y === fy)) {
+        food = { x: fx, y: fy };
+        return;
+      }
+    }
+    gameOver = true;
+    gameRunning = false;
+    messageBox.textContent = '🎉 小兔子吃饱了，陆沉说：你真好。';
+    if (gameLoop) clearInterval(gameLoop);
+  }
+
+  // ---------- 移动 ----------
+  function moveSnake() {
+    if (!gameRunning || gameOver) return;
+
+    const tryDx = nextDirection.dx;
+    const tryDy = nextDirection.dy;
+    if (!(tryDx === -direction.dx && tryDy === -direction.dy)) {
+      direction = { dx: tryDx, dy: tryDy };
+    }
+
+    const head = snake[0];
+    const newHead = {
+      x: head.x + direction.dx,
+      y: head.y + direction.dy
+    };
+
+    const isEating = (newHead.x === food.x && newHead.y === food.y);
+
+    let newSnake = [newHead, ...snake];
+    if (!isEating) newSnake.pop();
+
+    // 碰撞检测
+    const headCollision =
+      newHead.x < 0 || newHead.x >= GRID_SIZE ||
+      newHead.y < 0 || newHead.y >= GRID_SIZE ||
+      newSnake.slice(1).some(seg => seg.x === newHead.x && seg.y === newHead.y);
+
+    if (headCollision) {
+      gameRunning = false;
+      gameOver = true;
+      if (gameLoop) clearInterval(gameLoop);
+      messageBox.textContent = '💔 小兔子撞到了… 陆沉说：疼不疼？';
+      draw();
+      return;
+    }
+
+    snake = newSnake;
+
+    if (isEating) {
+      score++;
+      scoreDisplay.textContent = score;
+      const say = LUCHEN_SAYS[Math.floor(Math.random() * LUCHEN_SAYS.length)];
+      messageBox.textContent = '🥕 ' + say;
+      spawnFood();
+      if (score % 5 === 0 && speed > 70) {
+        speed = Math.max(70, speed - 6);
+        if (gameLoop) {
+          clearInterval(gameLoop);
+          gameLoop = setInterval(moveSnake, speed);
+        }
+      }
+    }
+    draw();
+  }
+
+  // ---------- 绘制 ----------
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 毛玻璃网格
+    ctx.strokeStyle = 'rgba(194, 130, 122, 0.04)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= GRID_SIZE; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * CELL_SIZE, 0);
+      ctx.lineTo(i * CELL_SIZE, canvas.height);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, i * CELL_SIZE);
+      ctx.lineTo(canvas.width, i * CELL_SIZE);
+      ctx.stroke();
+    }
+
+    // 食物：🥕
+    const fx = food.x * CELL_SIZE + CELL_SIZE / 2;
+    const fy = food.y * CELL_SIZE + CELL_SIZE / 2;
+    ctx.font = `${CELL_SIZE * 0.7}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🥕', fx, fy + 1);
+
+    // 蛇：兔子 🐇 头部 + 粉色圆点身体
+    snake.forEach((seg, index) => {
+      const x = seg.x * CELL_SIZE + CELL_SIZE / 2;
+      const y = seg.y * CELL_SIZE + CELL_SIZE / 2;
+      const radius = CELL_SIZE * 0.36;
+
+      if (index === 0) {
+        // 头部：兔子 emoji
+        ctx.font = `${CELL_SIZE * 0.65}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🐇', x, y + 1);
+      } else {
+        // 身体：粉色渐变圆点
+        const alpha = 0.6 + 0.4 * (1 - index / snake.length);
+        const gradient = ctx.createRadialGradient(
+          x - radius * 0.2, y - radius * 0.2, radius * 0.1,
+          x, y, radius
+        );
+        gradient.addColorStop(0, `rgba(230, 180, 180, ${alpha})`);
+        gradient.addColorStop(1, `rgba(200, 150, 150, ${alpha * 0.85})`);
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        ctx.shadowColor = 'rgba(194, 130, 122, 0.04)';
+        ctx.shadowBlur = 4;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    });
+  }
+
+  // ---------- 方向控制 ----------
+  function setDirection(dx, dy) {
+    if (!gameRunning || gameOver) return;
+    nextDirection = { dx, dy };
+  }
+
+  // 键盘
+  document.addEventListener('keydown', (e) => {
+    const map = {
+      'ArrowUp': { dx: 0, dy: -1 },
+      'ArrowDown': { dx: 0, dy: 1 },
+      'ArrowLeft': { dx: -1, dy: 0 },
+      'ArrowRight': { dx: 1, dy: 0 },
+    };
+    const dir = map[e.key];
+    if (dir) {
+      e.preventDefault();
+      setDirection(dir.dx, dir.dy);
+    }
+  });
+
+  // 方向键按钮
+  document.getElementById('btnUp').addEventListener('click', () => setDirection(0, -1));
+  document.getElementById('btnDown').addEventListener('click', () => setDirection(0, 1));
+  document.getElementById('btnLeft').addEventListener('click', () => setDirection(-1, 0));
+  document.getElementById('btnRight').addEventListener('click', () => setDirection(1, 0));
+
+  // 滑动辅助
+  let touchStart = null;
+  canvas.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    touchStart = { x: touch.clientX, y: touch.clientY };
+  }, { passive: true });
+
+  canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (!touchStart || !gameRunning) return;
+    const touch = e.touches[0];
+    const dx = touch.clientX - touchStart.x;
+    const dy = touch.clientY - touchStart.y;
+    if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      setDirection(dx > 0 ? 1 : -1, 0);
+    } else {
+      setDirection(0, dy > 0 ? 1 : -1);
+    }
+    touchStart = { x: touch.clientX, y: touch.clientY };
+  }, { passive: false });
+
+  // ---------- 开始 / 重来 ----------
+  function startGame() {
+    if (gameLoop) clearInterval(gameLoop);
+    initGame();
+    gameRunning = true;
+    gameOver = false;
+    speed = 130;
+    gameLoop = setInterval(moveSnake, speed);
+    messageBox.textContent = '🐇 小兔子出发啦';
+    draw();
+  }
+
+  document.getElementById('startBtn').addEventListener('click', startGame);
+
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    if (gameLoop) clearInterval(gameLoop);
+    initGame();
+    gameRunning = false;
+    gameOver = false;
+    speed = 130;
+    messageBox.textContent = '点「开始」喂兔子';
+    draw();
+  });
+
+  // ---------- 初始化 ----------
+  initGame();
+  draw();
+  messageBox.textContent = '点「开始」喂兔子';
+
+  // ---------- 如果从更多页跳过来，提供返回 ----------
+  console.log('🐇 小兔子吃胡萝卜 · 陆沉版已加载');
+</script>
+
+</body>
+</html>
