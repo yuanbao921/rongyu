@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>🍉 合成大绒球 · 陆沉</title>
+  <title>🍡 合成大绒球 · 陆沉</title>
   <style>
     * {
       margin: 0;
@@ -26,7 +26,7 @@
     .game-wrapper {
       width: 96%;
       max-width: 420px;
-      background: rgba(255, 252, 248, 0.45);
+      background: rgba(255, 252, 248, 0.40);
       backdrop-filter: blur(28px) saturate(1.4);
       -webkit-backdrop-filter: blur(28px) saturate(1.4);
       border-radius: 32px;
@@ -34,33 +34,82 @@
       border: 1px solid rgba(194, 130, 122, 0.06);
       box-shadow: 0 8px 48px rgba(90, 74, 58, 0.04);
       text-align: center;
+      position: relative;
     }
 
     .game-title {
-      font-size: 13px;
-      color: rgba(90, 74, 58, 0.22);
+      font-size: 12px;
+      color: rgba(90, 74, 58, 0.20);
       letter-spacing: 6px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       font-weight: 300;
+    }
+
+    /* ---------- 预览区 ---------- */
+    .preview-area {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px 8px 4px;
+      border-bottom: 1px dashed rgba(194, 130, 122, 0.06);
+      margin-bottom: 8px;
+    }
+
+    .preview-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: rgba(90, 74, 58, 0.25);
+      letter-spacing: 1px;
+    }
+
+    .preview-ball {
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 2px 8px rgba(90, 74, 58, 0.04);
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .preview-ball.current {
+      width: 28px;
+      height: 28px;
+    }
+    .preview-ball.next {
+      width: 22px;
+      height: 22px;
+      opacity: 0.6;
+    }
+
+    .preview-arrow {
+      color: rgba(90, 74, 58, 0.12);
+      font-size: 14px;
+    }
+
+    /* ---------- 画布 ---------- */
+    .canvas-wrap {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(194, 130, 122, 0.04);
     }
 
     canvas {
       display: block;
       width: 100%;
       aspect-ratio: 1 / 1.4;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 18px;
-      border: 1px solid rgba(194, 130, 122, 0.04);
+      background: rgba(255, 255, 255, 0.06);
       touch-action: none;
       cursor: pointer;
-      box-shadow: inset 0 2px 20px rgba(90, 74, 58, 0.02);
     }
 
+    /* ---------- 得分 ---------- */
     .game-info {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 12px;
+      margin-top: 10px;
       padding: 0 4px;
     }
 
@@ -87,11 +136,12 @@
       padding-left: 8px;
     }
 
+    /* ---------- 按钮 ---------- */
     .btn-group {
       display: flex;
       gap: 10px;
       justify-content: center;
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
     .btn {
@@ -126,21 +176,23 @@
       display: inline-block;
       margin-top: 10px;
       font-size: 11px;
-      color: rgba(90, 74, 58, 0.15);
+      color: rgba(90, 74, 58, 0.12);
       text-decoration: none;
       letter-spacing: 1px;
       border-bottom: 1px solid rgba(194, 130, 122, 0.03);
       padding-bottom: 2px;
     }
     .back-link:active {
-      color: rgba(90, 74, 58, 0.30);
+      color: rgba(90, 74, 58, 0.25);
     }
 
     @media (max-width: 400px) {
-      .game-wrapper { padding: 12px 10px 16px; }
+      .game-wrapper { padding: 12px 10px 14px; }
       .score { font-size: 12px; }
       .message-box { font-size: 11px; }
       .btn { font-size: 11px; padding: 6px 16px; }
+      .preview-ball.current { width: 24px; height: 24px; }
+      .preview-ball.next { width: 18px; height: 18px; }
     }
   </style>
 </head>
@@ -149,16 +201,31 @@
 <div class="game-wrapper">
   <div class="game-title">✦ 合 成 大 绒 球 ✦</div>
 
-  <canvas id="gameCanvas" width="400" height="560"></canvas>
+  <!-- 预览区 -->
+  <div class="preview-area">
+    <div class="preview-item">
+      <span>当前</span>
+      <div class="preview-ball current" id="currentPreview"></div>
+    </div>
+    <span class="preview-arrow">⇢</span>
+    <div class="preview-item">
+      <span>下一个</span>
+      <div class="preview-ball next" id="nextPreview"></div>
+    </div>
+  </div>
+
+  <!-- 画布 -->
+  <div class="canvas-wrap">
+    <canvas id="gameCanvas" width="400" height="560"></canvas>
+  </div>
 
   <div class="game-info">
-    <div class="score">🌟 <span id="scoreDisplay">0</span></div>
-    <div class="message-box" id="messageBox">点上方放小爱心</div>
+    <div class="score">✦ <span id="scoreDisplay">0</span></div>
+    <div class="message-box" id="messageBox">按住滑动 · 松手落下</div>
   </div>
 
   <div class="btn-group">
     <button class="btn" id="restartBtn">🔄 重来</button>
-    <button class="btn btn-primary" id="nextBtn">下一个 💕</button>
   </div>
 
   <a class="back-link" href="index.html">← 回 绒 语</a>
@@ -166,129 +233,282 @@
 
 <script>
   // ============================================================
-  //  合成大绒球 · 陆沉版
-  //  水果链：💕 → ✨ → 🌙 → ☀️ → 🌸 → 🍑 → 大绒球
+  //  合成大绒球 · 纯圆形版（低饱和半透明）
+  //  操作：按住滑动 → 松手自动落下
   // ============================================================
 
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
   const scoreDisplay = document.getElementById('scoreDisplay');
   const messageBox = document.getElementById('messageBox');
+  const currentPreview = document.getElementById('currentPreview');
+  const nextPreview = document.getElementById('nextPreview');
 
-  // ---------- 尺寸 ----------
   const W = canvas.width;
   const H = canvas.height;
-  const COLS = 6;
-  const GAP = 6;
-  const RADIUS = 28;
-  const DROP_Y = 60;
 
-  // ---------- 水果链 ----------
-  const FRUITS = [
-    { emoji: '💕', value: 1, color: '#E88080' },
-    { emoji: '✨', value: 2, color: '#F0C060' },
-    { emoji: '🌙', value: 4, color: '#C0B0D0' },
-    { emoji: '☀️', value: 8, color: '#F0A030' },
-    { emoji: '🌸', value: 16, color: '#E8A0B0' },
-    { emoji: '🍑', value: 32, color: '#F0A080' },
-    { emoji: '🧶', value: 64, color: '#D4A0C0' }, // 大绒球
+  // ---------- 配置 ----------
+  const COLS = 5;
+  const ROWS = 12;
+  const TOP_OFFSET = 50;
+
+  // ---------- 水果等级配置（纯圆形，无 emoji） ----------
+  const FRUIT_CONFIG = [
+    { color: '#D4A0A0', light: '#F0D0D0', radius: 22, value: 1, label: '粉' },
+    { color: '#C8B0A0', light: '#E8D8CC', radius: 28, value: 2, label: '奶' },
+    { color: '#A8BCC8', light: '#D0DCE8', radius: 34, value: 4, label: '雾' },
+    { color: '#D4B898', light: '#E8D8C0', radius: 42, value: 8, label: '杏' },
+    { color: '#C8A8B8', light: '#E0D0D8', radius: 50, value: 16, label: '紫' },
+    { color: '#D8A898', light: '#ECD0C8', radius: 60, value: 32, label: '桃' },
+    { color: '#C8B8A0', light: '#E8DDCC', radius: 74, value: 64, label: '绒' },
   ];
+
+  const MAX_LEVEL = FRUIT_CONFIG.length - 1;
 
   // ---------- 陆沉语录 ----------
   const LUCHEN_SAYS = {
-    2: '✨ 小星星亮了，像你的眼睛。',
-    4: '🌙 月亮出来了，我在想你。',
-    8: '☀️ 太阳升起来了，你起床了吗？',
-    16: '🌸 花开了一朵，像你的笑。',
-    32: '🍑 桃子熟了，你尝一口吗？',
-    64: '🧶 大绒球！我的心被你装满了。',
+    1: '粉粉的，像你害羞的样子。',
+    2: '奶茶色，想和你一起喝。',
+    4: '雾蓝，像早晨的天空。',
+    8: '暖杏，你笑起来就是这种感觉。',
+    16: '浅紫，温柔得像你的声音。',
+    32: '蜜桃，甜到心里了。',
+    64: '大绒球！我的心全都是你了。',
   };
 
   // ---------- 状态 ----------
   let grid = [];
-  let currentFruit = 0;
-  let nextFruit = 0;
-  let dropX = 2;
+  let currentLevel = 0;
+  let nextLevel = 0;
+  let dropCol = 2;
   let score = 0;
   let gameOver = false;
-  let canDrop = true;
-  let isDropping = false;
+  let isAnimating = false;
+  let floatTexts = [];
+
+  // 拖拽状态
+  let isDragging = false;
+  let dragX = 0;
+
+  // ---------- 获取单元格尺寸 ----------
+  function getCellSize() {
+    const cellW = W / COLS;
+    const cellH = (H - TOP_OFFSET) / ROWS;
+    return { cellW, cellH };
+  }
 
   // ---------- 初始化 ----------
   function initGame() {
     grid = [];
-    for (let row = 0; row < 12; row++) {
-      grid[row] = [];
-      for (let col = 0; col < COLS; col++) {
-        grid[row][col] = null;
+    for (let r = 0; r < ROWS; r++) {
+      grid[r] = [];
+      for (let c = 0; c < COLS; c++) {
+        grid[r][c] = null;
       }
     }
-    currentFruit = Math.floor(Math.random() * 3);
-    nextFruit = Math.floor(Math.random() * 3);
-    dropX = Math.floor(COLS / 2);
+    currentLevel = Math.floor(Math.random() * 3);
+    nextLevel = Math.floor(Math.random() * 3);
+    dropCol = Math.floor(COLS / 2);
     score = 0;
     gameOver = false;
-    canDrop = true;
-    isDropping = false;
+    isAnimating = false;
+    floatTexts = [];
     scoreDisplay.textContent = '0';
-    messageBox.textContent = '点上方放小爱心 💕';
+    messageBox.textContent = '按住滑动 · 松手落下';
+    updatePreview();
     draw();
   }
 
-  // ---------- 获取水果颜色 ----------
-  function getFruitColor(index) {
-    return FRUITS[index] ? FRUITS[index].color : '#E88080';
+  // ---------- 更新预览 ----------
+  function updatePreview() {
+    const c = FRUIT_CONFIG[currentLevel];
+    const n = FRUIT_CONFIG[nextLevel];
+    if (c) {
+      currentPreview.style.background =
+        `radial-gradient(circle at 35% 35%, ${c.light}, ${c.color})`;
+      currentPreview.style.width = '28px';
+      currentPreview.style.height = '28px';
+    }
+    if (n) {
+      nextPreview.style.background =
+        `radial-gradient(circle at 35% 35%, ${n.light}, ${n.color})`;
+      nextPreview.style.width = '22px';
+      nextPreview.style.height = '22px';
+    }
   }
 
-  function getFruitEmoji(index) {
-    return FRUITS[index] ? FRUITS[index].emoji : '💕';
+  // ---------- 绘制水果 ----------
+  function drawBall(x, y, level, alpha = 1.0) {
+    const cfg = FRUIT_CONFIG[level];
+    if (!cfg) return;
+    const r = cfg.radius;
+    const grad = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r);
+    grad.addColorStop(0, cfg.light);
+    grad.addColorStop(0.7, cfg.color);
+    grad.addColorStop(1, cfg.color);
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.shadowColor = 'rgba(90, 74, 58, 0.06)';
+    ctx.shadowBlur = 10;
+
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // 白色描边（保证在任何背景下可见）
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    // 高光
+    ctx.beginPath();
+    ctx.arc(x - r * 0.25, y - r * 0.3, r * 0.18, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  // ---------- 绘制 ----------
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    const { cellW, cellH } = getCellSize();
+
+    // ---- 边界 ----
+    ctx.strokeStyle = 'rgba(194, 130, 122, 0.08)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, TOP_OFFSET, W, H - TOP_OFFSET);
+
+    // 底部阴影
+    const grad = ctx.createLinearGradient(0, H - 30, 0, H);
+    grad.addColorStop(0, 'rgba(194, 130, 122, 0)');
+    grad.addColorStop(1, 'rgba(194, 130, 122, 0.04)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, H - 30, W, 30);
+
+    // 网格（极淡）
+    for (let r = 0; r <= ROWS; r++) {
+      ctx.strokeStyle = 'rgba(194, 130, 122, 0.025)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(0, TOP_OFFSET + r * cellH);
+      ctx.lineTo(W, TOP_OFFSET + r * cellH);
+      ctx.stroke();
+    }
+    for (let c = 0; c <= COLS; c++) {
+      ctx.strokeStyle = 'rgba(194, 130, 122, 0.025)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(c * cellW, TOP_OFFSET);
+      ctx.lineTo(c * cellW, H);
+      ctx.stroke();
+    }
+
+    // ---- 绘制已放置的水果 ----
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const level = grid[r][c];
+        if (level === null) continue;
+        const x = c * cellW + cellW / 2;
+        const y = TOP_OFFSET + r * cellH + cellH / 2;
+        drawBall(x, y, level);
+      }
+    }
+
+    // ---- 绘制拖拽中的预览 ----
+    if (isDragging && !gameOver) {
+      const x = dragX * cellW + cellW / 2;
+      const y = TOP_OFFSET + 30;
+      drawBall(x, y, currentLevel, 0.7);
+      // 虚线指示
+      ctx.setLineDash([3, 5]);
+      ctx.strokeStyle = 'rgba(194, 130, 122, 0.06)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, y + FRUIT_CONFIG[currentLevel].radius + 10);
+      ctx.lineTo(x, TOP_OFFSET + 60);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // ---- 分数飘字 ----
+    floatTexts.forEach((ft, idx) => {
+      ctx.save();
+      ctx.globalAlpha = ft.life;
+      ctx.font = '18px "PingFang SC", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#C2827A';
+      ctx.fillText(`+${ft.score}`, ft.x, ft.y);
+      ctx.restore();
+    });
+
+    // ---- 游戏结束遮罩 ----
+    if (gameOver) {
+      ctx.fillStyle = 'rgba(90, 74, 58, 0.10)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.font = '20px "PingFang SC", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(90, 74, 58, 0.50)';
+      ctx.fillText('💭 再试一次吧', W / 2, H / 2 - 12);
+      ctx.font = '12px "PingFang SC", sans-serif';
+      ctx.fillStyle = 'rgba(90, 74, 58, 0.20)';
+      ctx.fillText('陆沉说：我陪你重新来', W / 2, H / 2 + 28);
+    }
   }
 
   // ---------- 查找下落位置 ----------
   function findDropRow(col) {
-    for (let row = grid.length - 1; row >= 0; row--) {
-      if (!grid[row][col]) return row;
+    for (let r = ROWS - 1; r >= 0; r--) {
+      if (grid[r][col] === null) return r;
     }
     return -1;
   }
 
-  // ---------- 检测碰撞合并 ----------
+  // ---------- 检查合并（递归） ----------
   function checkMerge(row, col) {
-    const val = grid[row][col];
-    if (val === null || val >= FRUITS.length - 1) return false;
+    const level = grid[row][col];
+    if (level === null || level >= MAX_LEVEL) return false;
 
     let merged = false;
     const neighbors = [
-      [row - 1, col], [row + 1, col],
-      [row, col - 1], [row, col + 1],
-      [row - 1, col - 1], [row - 1, col + 1],
-      [row + 1, col - 1], [row + 1, col + 1]
+      [-1, 0], [1, 0], [0, -1], [0, 1],
+      [-1, -1], [-1, 1], [1, -1], [1, 1]
     ];
 
-    for (const [nr, nc] of neighbors) {
-      if (nr < 0 || nr >= grid.length || nc < 0 || nc >= COLS) continue;
-      if (grid[nr][nc] === val) {
-        // 合并！
+    for (const [dr, dc] of neighbors) {
+      const nr = row + dr;
+      const nc = col + dc;
+      if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) continue;
+      if (grid[nr][nc] === level) {
         grid[nr][nc] = null;
-        grid[row][col] = val + 1;
+        grid[row][col] = level + 1;
         merged = true;
 
-        // 加分
-        const addScore = Math.pow(2, val + 1);
+        const newLevel = level + 1;
+        const addScore = FRUIT_CONFIG[newLevel].value;
         score += addScore;
         scoreDisplay.textContent = score;
 
-        // 陆沉说话
-        const newVal = val + 1;
-        const say = LUCHEN_SAYS[newVal] || `合成了 ${FRUITS[newVal].emoji}！`;
-        messageBox.textContent = '✨ ' + say;
+        // 分数飘字
+        const { cellW, cellH } = getCellSize();
+        const x = col * cellW + cellW / 2;
+        const y = TOP_OFFSET + row * cellH + cellH / 2;
+        floatTexts.push({ x, y, score: addScore, life: 1.0 });
 
-        // 如果合成大绒球
-        if (newVal === FRUITS.length - 1) {
+        // 陆沉说话
+        const say = LUCHEN_SAYS[newLevel] || `合成了 ${FRUIT_CONFIG[newLevel].label}`;
+        messageBox.textContent = '✦ ' + say;
+
+        if (newLevel === MAX_LEVEL) {
           messageBox.textContent = '🧶 大绒球！陆沉说：我的心都是你的了。';
         }
 
-        // 递归检查新合成
         checkMerge(row, col);
         return true;
       }
@@ -296,11 +516,116 @@
     return merged;
   }
 
-  // ---------- 掉落 ----------
-  function dropFruit() {
-    if (gameOver || !canDrop || isDropping) return;
+  // ---------- 下落动画 ----------
+  function animateDrop(col, targetRow) {
+    isAnimating = true;
+    const { cellW, cellH } = getCellSize();
+    const startY = TOP_OFFSET + 20;
+    const endY = TOP_OFFSET + targetRow * cellH + cellH / 2;
+    const x = col * cellW + cellW / 2;
 
-    const row = findDropRow(dropX);
+    let progress = 0;
+    const duration = 200; // ms
+    const startTime = Date.now();
+
+    // 在目标位置先占位（隐藏，防止后续碰撞误判）
+    grid[targetRow][col] = currentLevel;
+
+    function animate() {
+      const elapsed = Date.now() - startTime;
+      progress = Math.min(elapsed / duration, 1);
+      // easeOutQuad
+      const eased = 1 - Math.pow(1 - progress, 2);
+      const currentY = startY + (endY - startY) * eased;
+
+      // 重绘
+      ctx.clearRect(0, 0, W, H);
+      drawGridAndBalls();
+
+      // 绘制下落中的球
+      drawBall(x, currentY, currentLevel, 0.9);
+
+      // 绘制浮字（draw 里已有，但重绘时会被覆盖，手动补）
+      floatTexts.forEach(ft => {
+        ctx.save();
+        ctx.globalAlpha = ft.life;
+        ctx.font = '18px "PingFang SC", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#C2827A';
+        ctx.fillText(`+${ft.score}`, ft.x, ft.y);
+        ctx.restore();
+      });
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        // 下落完成，检查合并
+        checkMerge(targetRow, col);
+        isAnimating = false;
+
+        // 检查游戏结束
+        if (grid[0][Math.floor(COLS / 2)] !== null) {
+          gameOver = true;
+          messageBox.textContent = '💔 装不下了… 陆沉说：没关系，我陪你重来。';
+        }
+
+        // 准备下一个
+        currentLevel = nextLevel;
+        nextLevel = Math.floor(Math.random() * 3);
+        dropCol = Math.floor(COLS / 2);
+        updatePreview();
+        draw();
+      }
+    }
+
+    // 辅助绘制函数（不含下落球）
+    function drawGridAndBalls() {
+      const { cellW, cellH } = getCellSize();
+      ctx.clearRect(0, 0, W, H);
+      // 边界
+      ctx.strokeStyle = 'rgba(194, 130, 122, 0.08)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(0, TOP_OFFSET, W, H - TOP_OFFSET);
+      // 网格
+      for (let r = 0; r <= ROWS; r++) {
+        ctx.strokeStyle = 'rgba(194, 130, 122, 0.025)';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(0, TOP_OFFSET + r * cellH);
+        ctx.lineTo(W, TOP_OFFSET + r * cellH);
+        ctx.stroke();
+      }
+      for (let c = 0; c <= COLS; c++) {
+        ctx.strokeStyle = 'rgba(194, 130, 122, 0.025)';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(c * cellW, TOP_OFFSET);
+        ctx.lineTo(c * cellW, H);
+        ctx.stroke();
+      }
+      // 已放置的水果
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const level = grid[r][c];
+          if (level === null) continue;
+          // 如果这是正在下落的那个，跳过（由外层绘制）
+          if (r === targetRow && c === col && progress < 1) continue;
+          const x = c * cellW + cellW / 2;
+          const y = TOP_OFFSET + r * cellH + cellH / 2;
+          drawBall(x, y, level);
+        }
+      }
+    }
+
+    animate();
+  }
+
+  // ---------- 放置水果 ----------
+  function dropFruit(col) {
+    if (gameOver || isAnimating) return;
+
+    const row = findDropRow(col);
     if (row === -1) {
       gameOver = true;
       messageBox.textContent = '💔 装不下了… 陆沉说：没关系，我陪你重来。';
@@ -308,200 +633,109 @@
       return;
     }
 
-    isDropping = true;
-    grid[row][dropX] = currentFruit;
-
-    // 检查合并
-    checkMerge(row, dropX);
-
-    // 准备下一个水果
-    currentFruit = nextFruit;
-    nextFruit = Math.floor(Math.random() * 3);
-    dropX = Math.floor(COLS / 2);
-    canDrop = true;
-    isDropping = false;
-
-    // 检查游戏结束
-    if (grid[0][Math.floor(COLS / 2)] !== null) {
-      gameOver = true;
-      messageBox.textContent = '💔 堆满了… 陆沉说：我陪你重新开始。';
-    }
-
-    draw();
+    // 先占位防止重复放置
+    grid[row][col] = currentLevel;
+    animateDrop(col, row);
   }
 
-  // ---------- 绘制 ----------
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-
-    // 毛玻璃网格
-    ctx.strokeStyle = 'rgba(194, 130, 122, 0.04)';
-    ctx.lineWidth = 0.5;
-    const cellW = W / COLS;
-    const cellH = H / grid.length;
-    for (let i = 0; i <= COLS; i++) {
-      ctx.beginPath();
-      ctx.moveTo(i * cellW, 0);
-      ctx.lineTo(i * cellW, H);
-      ctx.stroke();
-    }
-    for (let i = 0; i <= grid.length; i++) {
-      ctx.beginPath();
-      ctx.moveTo(0, i * cellH);
-      ctx.lineTo(W, i * cellH);
-      ctx.stroke();
-    }
-
-    // 绘制已放置的水果
-    for (let row = 0; row < grid.length; row++) {
-      for (let col = 0; col < COLS; col++) {
-        const val = grid[row][col];
-        if (val === null) continue;
-        const x = col * cellW + cellW / 2;
-        const y = row * cellH + cellH / 2;
-        const r = Math.min(cellW, cellH) * 0.38;
-
-        // 光晕
-        const grad = ctx.createRadialGradient(x - r * 0.2, y - r * 0.2, 0, x, y, r);
-        grad.addColorStop(0, 'rgba(255,255,255,0.2)');
-        grad.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
-
-        // 水果 emoji（大号）
-        ctx.font = `${r * 1.2}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(getFruitEmoji(val), x, y + 1);
-
-        // 边框光晕
-        ctx.shadowColor = 'rgba(194, 130, 122, 0.03)';
-        ctx.shadowBlur = 8;
-        ctx.shadowBlur = 0;
-      }
-    }
-
-    // 绘制当前待掉落水果（顶部）
-    if (!gameOver && currentFruit !== null) {
-      const x = dropX * cellW + cellW / 2;
-      const y = DROP_Y;
-      const r = Math.min(cellW, cellH) * 0.40;
-      ctx.font = `${r * 1.3}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(getFruitEmoji(currentFruit), x, y + 1);
-
-      // 指示器（虚线）
-      ctx.setLineDash([4, 6]);
-      ctx.strokeStyle = 'rgba(194, 130, 122, 0.10)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(x, DROP_Y + r + 8);
-      ctx.lineTo(x, DROP_Y + r + 40);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // 下一个水果预览
-      ctx.font = '16px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
-      ctx.textAlign = 'right';
-      ctx.textBaseline = 'bottom';
-      ctx.fillText('下一个 ' + getFruitEmoji(nextFruit), W - 10, DROP_Y + 30);
-    }
-
-    // 游戏结束遮罩
-    if (gameOver) {
-      ctx.fillStyle = 'rgba(90, 74, 58, 0.08)';
-      ctx.fillRect(0, 0, W, H);
-      ctx.font = '22px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('💔 重来吧', W / 2, H / 2 - 10);
-      ctx.font = '12px "PingFang SC", sans-serif';
-      ctx.fillStyle = 'rgba(90, 74, 58, 0.30)';
-      ctx.fillText('点「重来」继续', W / 2, H / 2 + 30);
-    }
+  // ---------- 更新浮字动画 ----------
+  function updateFloatTexts() {
+    floatTexts = floatTexts.filter(ft => ft.life > 0);
+    floatTexts.forEach(ft => {
+      ft.y -= 0.8;
+      ft.life -= 0.008;
+    });
   }
 
-  // ---------- 移动指示器 ----------
-  function moveDrop(dx) {
-    if (gameOver || isDropping) return;
-    const newX = dropX + dx;
-    if (newX >= 0 && newX < COLS) {
-      dropX = newX;
+  // ---------- 主循环（更新浮字） ----------
+  function gameLoop() {
+    if (!gameOver) {
+      updateFloatTexts();
       draw();
     }
+    requestAnimationFrame(gameLoop);
   }
 
   // ---------- 事件绑定 ----------
-  // 键盘
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') moveDrop(-1);
-    if (e.key === 'ArrowRight') moveDrop(1);
-    if (e.key === 'ArrowDown' || e.key === ' ') {
-      e.preventDefault();
-      dropFruit();
+  // 鼠标/触摸拖拽
+  function getColFromEvent(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const canvasX = (clientX - rect.left) * scaleX;
+    const col = Math.floor(canvasX / (W / COLS));
+    return Math.max(0, Math.min(COLS - 1, col));
+  }
+
+  canvas.addEventListener('mousedown', (e) => {
+    if (gameOver || isAnimating) return;
+    isDragging = true;
+    dragX = getColFromEvent(e);
+    draw();
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (!isDragging || gameOver || isAnimating) return;
+    dragX = getColFromEvent(e);
+    draw();
+  });
+
+  canvas.addEventListener('mouseup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    if (!gameOver && !isAnimating) {
+      dropFruit(dragX);
     }
   });
 
-  // 触摸/点击 canvas
-  let touchX = null;
-  canvas.addEventListener('touchstart', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const touch = e.touches[0];
-    const canvasX = (touch.clientX - rect.left) * scaleX;
-    const canvasY = (touch.clientY - rect.top) * scaleY;
-
-    if (canvasY < 80) {
-      // 点击顶部 → 放下
-      dropFruit();
-    } else {
-      // 左右滑动移动
-      touchX = canvasX;
+  canvas.addEventListener('mouseleave', () => {
+    if (isDragging) {
+      isDragging = false;
+      if (!gameOver && !isAnimating) {
+        dropFruit(dragX);
+      }
     }
-  }, { passive: true });
+  });
+
+  // 触摸事件
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (gameOver || isAnimating) return;
+    isDragging = true;
+    dragX = getColFromEvent(e);
+    draw();
+  }, { passive: false });
 
   canvas.addEventListener('touchmove', (e) => {
     e.preventDefault();
-    if (touchX === null) return;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const touch = e.touches[0];
-    const canvasX = (touch.clientX - rect.left) * scaleX;
-    const dx = canvasX - touchX;
-    if (Math.abs(dx) > 20) {
-      moveDrop(dx > 0 ? 1 : -1);
-      touchX = canvasX;
+    if (!isDragging || gameOver || isAnimating) return;
+    dragX = getColFromEvent(e);
+    draw();
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    if (!isDragging) return;
+    isDragging = false;
+    if (!gameOver && !isAnimating) {
+      dropFruit(dragX);
     }
   }, { passive: false });
 
-  canvas.addEventListener('touchend', () => {
-    touchX = null;
-  }, { passive: true });
-
-  // 鼠标点击
-  canvas.addEventListener('click', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const canvasX = (e.clientX - rect.left) * scaleX;
-    const canvasY = (e.clientY - rect.top) * scaleY;
-
-    if (canvasY < 80) {
-      dropFruit();
-    } else {
-      // 点击左右两侧移动
-      if (canvasX < W / 3) moveDrop(-1);
-      else if (canvasX > W * 2 / 3) moveDrop(1);
-      else dropFruit();
+  // 键盘
+  document.addEventListener('keydown', (e) => {
+    if (gameOver || isAnimating) return;
+    if (e.key === 'ArrowLeft' && dropCol > 0) {
+      dropCol--;
+      draw();
+    } else if (e.key === 'ArrowRight' && dropCol < COLS - 1) {
+      dropCol++;
+      draw();
+    } else if (e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      dropFruit(dropCol);
     }
   });
-
-  // 按钮：下一个（手动触发掉落）
-  document.getElementById('nextBtn').addEventListener('click', dropFruit);
 
   // 重来
   document.getElementById('restartBtn').addEventListener('click', () => {
@@ -510,6 +744,7 @@
 
   // ---------- 启动 ----------
   initGame();
+  gameLoop();
 </script>
 
 </body>
