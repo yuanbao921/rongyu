@@ -51,7 +51,7 @@ async function focusAI(prompt) {
   try {
     const res = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + (Store.get('aiKey','')), 'Content-Type': 'application/json' },
+      headers: { 'Authorization': 'Bearer sk-aa1485e2789f4b438a83290146907fa8', 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'deepseek-chat',
         messages: [

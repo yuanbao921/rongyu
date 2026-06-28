@@ -3,10 +3,9 @@
    调用 OpenWeatherMap API，渲染天气卡片
    ============================================================ */
 
-/* ---------- API Key（从设置读取）---------- */
-function getWeatherKey() {
-  return Store.get('weatherKey', '');
-}
+/* ---------- API Key ---------- */
+// ⚠️  生产环境建议通过后端代理，避免 Key 暴露在前端
+const WEATHER_KEY = 'E65268553c35484ca11a5605ed254c9d';
 
 /* ---------- 天气码 → Emoji 映射 ---------- */
 function weatherEmoji(id) {
@@ -31,7 +30,7 @@ async function loadWeather() {
 
   try {
     const url = `https://api.openweathermap.org/data/2.5/weather` +
-                `?q=${encodeURIComponent(city)}&appid=${getWeatherKey()}` +
+                `?q=${encodeURIComponent(city)}&appid=${WEATHER_KEY}` +
                 `&units=metric&lang=zh_cn`;
 
     const res = await fetch(url);

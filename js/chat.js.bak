@@ -147,6 +147,10 @@ async function sendChat() {
     const data  = await res.json();
     const reply = data.choices?.[0]?.message?.content || '（无回复）';
     chatHistory.push({ role: 'assistant', content: reply });
+    // 把这次聊天存入日记素材
+    if (typeof saveChatMemoForDiary === 'function') {
+      saveChatMemoForDiary(text, reply);
+    }
 
     // 更新占位气泡
     if (bubbleEl) {

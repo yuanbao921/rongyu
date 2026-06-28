@@ -3,12 +3,16 @@
    功能：发消息 / AI 回复（DeepSeek）/ 语音合成（ElevenLabs）
    ============================================================ */
 
-/* ---------- API 配置 ---------- */
-// ⚠️  Key 已通过 localStorage 动态读取；如果为空则使用内置默认值
-// 如需更换，在设置页填写后自动生效（暂未接入 UI，预留接口）
-const DEEPSEEK_KEY = 'sk-aa1485e2789f4b438a83290146907fa8';
-const EL_KEY       = 'sk_e1799f3eb6bf61ee018ae6dd77fd079dce999918b5270c80';
-const VOICE_ID     = 'p1YcLh1gvGfUTIAip2HW';
+/* ---------- API 配置（从设置页读取）---------- */
+function getChatKey() {
+  return Store.get('aiKey', '');
+}
+function getELKey() {
+  return Store.get('elKey', '');
+}
+function getVoiceId() {
+  return Store.get('voiceId', 'p1YcLh1gvGfUTIAip2HW');
+}
 
 /* ---------- 对话历史（内存，不持久化）---------- */
 const chatHistory = [];
@@ -81,10 +85,10 @@ async function speakText(text, btn) {
   if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
   try {
     const res = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${getVoiceId()}`,
       {
         method: 'POST',
-        headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json' },
+        headers: { 'xi-api-key': getELKey(), 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text,
           model_id: 'eleven_multilingual_v2',
@@ -131,7 +135,7 @@ async function sendChat() {
     const res = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + DEEPSEEK_KEY,
+        'Authorization': 'Bearer ' + getChatKey(),
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
