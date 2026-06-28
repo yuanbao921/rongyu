@@ -30,18 +30,23 @@
       backdrop-filter: blur(28px) saturate(1.4);
       -webkit-backdrop-filter: blur(28px) saturate(1.4);
       border-radius: 32px;
-      padding: 16px 16px 20px;
+      padding: 12px 12px 16px;
       border: 1px solid rgba(194, 130, 122, 0.06);
       box-shadow: 0 8px 48px rgba(90, 74, 58, 0.04);
       text-align: center;
+      max-height: 98dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .game-title {
-      font-size: 12px;
+      font-size: 11px;
       color: rgba(90, 74, 58, 0.20);
       letter-spacing: 6px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-weight: 300;
+      flex-shrink: 0;
     }
 
     /* ---------- 游戏信息 ---------- */
@@ -49,9 +54,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 4px 8px 4px;
+      padding: 0 4px 6px 4px;
       border-bottom: 1px dashed rgba(194, 130, 122, 0.06);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+      flex-shrink: 0;
     }
 
     .score-item {
@@ -68,6 +74,21 @@
       font-size: 10px;
       color: rgba(90, 74, 58, 0.20);
       letter-spacing: 1px;
+      margin-right: 4px;
+    }
+
+    .next-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #nextCanvas {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      flex-shrink: 0;
     }
 
     /* ---------- 画布 ---------- */
@@ -76,15 +97,19 @@
       border-radius: 16px;
       overflow: hidden;
       border: 1px solid rgba(194, 130, 122, 0.04);
+      flex-shrink: 1;
+      min-height: 0;
     }
 
-    canvas {
+    #gameCanvas {
       display: block;
       width: 100%;
-      aspect-ratio: 1 / 1.6;
+      max-height: 56vh;
+      aspect-ratio: 10 / 16;
       background: rgba(255, 255, 255, 0.06);
       touch-action: none;
       cursor: pointer;
+      margin: 0 auto;
     }
 
     /* ---------- 消息 ---------- */
@@ -92,18 +117,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 10px;
+      margin-top: 8px;
       padding: 0 4px;
+      flex-shrink: 0;
     }
 
     .message-box {
       flex: 1;
       text-align: center;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--rose, #C2827A);
       font-weight: 350;
       letter-spacing: 0.3px;
-      min-height: 1.5em;
+      min-height: 1.4em;
       font-style: italic;
     }
 
@@ -112,17 +138,18 @@
       display: flex;
       gap: 10px;
       justify-content: center;
-      margin-top: 10px;
+      margin-top: 8px;
+      flex-shrink: 0;
     }
 
     .btn {
-      padding: 8px 22px;
+      padding: 6px 18px;
       border-radius: 40px;
       border: 1px solid rgba(194, 130, 122, 0.10);
       background: rgba(255, 255, 255, 0.20);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      font-size: 12px;
+      font-size: 11px;
       color: var(--brown, #4A3832);
       cursor: pointer;
       transition: all 0.18s;
@@ -145,13 +172,14 @@
 
     .back-link {
       display: inline-block;
-      margin-top: 10px;
-      font-size: 11px;
+      margin-top: 8px;
+      font-size: 10px;
       color: rgba(90, 74, 58, 0.12);
       text-decoration: none;
       letter-spacing: 1px;
       border-bottom: 1px solid rgba(194, 130, 122, 0.03);
       padding-bottom: 2px;
+      flex-shrink: 0;
     }
     .back-link:active {
       color: rgba(90, 74, 58, 0.25);
@@ -159,10 +187,22 @@
 
     /* ---------- 小屏适配 ---------- */
     @media (max-width: 400px) {
-      .game-wrapper { padding: 12px 10px 14px; }
+      .game-wrapper { padding: 10px 8px 12px; }
+      .game-title { font-size: 10px; }
       .score-item { font-size: 11px; }
-      .message-box { font-size: 11px; }
-      .btn { font-size: 11px; padding: 6px 16px; }
+      .message-box { font-size: 10px; }
+      .btn { font-size: 10px; padding: 5px 14px; }
+      #nextCanvas { width: 40px; height: 40px; }
+      #gameCanvas { max-height: 50vh; }
+    }
+
+    @media (max-height: 700px) {
+      #gameCanvas { max-height: 44vh; }
+      .game-wrapper { padding: 8px 8px 10px; }
+      .game-title { margin-bottom: 4px; }
+      .game-top { margin-bottom: 4px; padding-bottom: 4px; }
+      .game-info { margin-top: 4px; }
+      .btn-group { margin-top: 4px; }
     }
   </style>
 </head>
@@ -173,16 +213,18 @@
 
   <div class="game-top">
     <div class="score-item">✨ 分数 <span id="scoreDisplay">0</span></div>
-    <div class="next-label">下一个</div>
-    <canvas id="nextCanvas" width="80" height="80"></canvas>
+    <div class="next-container">
+      <span class="next-label">下一个</span>
+      <canvas id="nextCanvas" width="80" height="80"></canvas>
+    </div>
   </div>
 
   <div class="canvas-wrap">
-    <canvas id="gameCanvas" width="240" height="400"></canvas>
+    <canvas id="gameCanvas" width="200" height="320"></canvas>
   </div>
 
   <div class="game-info">
-    <div class="message-box" id="messageBox">左右滑动 · 点击旋转</div>
+    <div class="message-box" id="messageBox">← → 移动 · 点击旋转</div>
   </div>
 
   <div class="btn-group">
@@ -194,8 +236,8 @@
 
 <script>
   // ============================================================
-  //  俄罗斯方块 · 陆沉版
-  //  低饱和暖色 · 毛玻璃 · 温柔语录
+  //  俄罗斯方块 · 陆沉版（修复版）
+  //  修正：界面适配、下落锁定、触摸优化
   // ============================================================
 
   const canvas = document.getElementById('gameCanvas');
@@ -207,10 +249,10 @@
 
   // ---------- 尺寸 ----------
   const COLS = 10;
-  const ROWS = 20;
+  const ROWS = 16;
   const BLOCK_SIZE = canvas.width / COLS;
 
-  // ---------- 配色（低饱和绒语风） ----------
+  // ---------- 配色 ----------
   const COLORS = [
     null,
     '#D4A0A0', // 1 玫瑰粉
@@ -264,18 +306,17 @@
   let gameOver = false;
   let gameInterval = null;
   let dropInterval = 500;
+  let isPaused = false;
 
-  // ---------- 初始化 ----------
+  // ---------- 初始化网格 ----------
   function initGrid() {
     grid = [];
     for (let r = 0; r < ROWS; r++) {
-      grid[r] = [];
-      for (let c = 0; c < COLS; c++) {
-        grid[r][c] = 0;
-      }
+      grid[r] = new Array(COLS).fill(0);
     }
   }
 
+  // ---------- 创建方块 ----------
   function createPiece() {
     const type = Math.floor(Math.random() * 7) + 1;
     const shape = SHAPES[type].map(row => [...row]);
@@ -288,6 +329,7 @@
     };
   }
 
+  // ---------- 生成新方块 ----------
   function spawnPiece() {
     if (nextPiece === null) {
       nextPiece = createPiece();
@@ -321,7 +363,7 @@
         if (shape[r][c]) {
           const x = offX + c;
           const y = offY + r;
-          if (x < 0 || x >= COLS || y >= ROWS || y < 0) return true;
+          if (x < 0 || x >= COLS || y >= ROWS) return true;
           if (y >= 0 && grid[y][x] !== 0) return true;
         }
       }
@@ -337,7 +379,9 @@
         if (shape[r][c]) {
           const gx = x + c;
           const gy = y + r;
-          if (gy >= 0) grid[gy][gx] = color;
+          if (gy >= 0 && gy < ROWS && gx >= 0 && gx < COLS) {
+            grid[gy][gx] = color;
+          }
         }
       }
     }
@@ -353,7 +397,7 @@
         grid.splice(r, 1);
         grid.unshift(new Array(COLS).fill(0));
         cleared++;
-        r++; // 重新检查同一行
+        r++;
       }
     }
 
@@ -385,7 +429,7 @@
 
   // ---------- 下落 ----------
   function drop() {
-    if (gameOver || !currentPiece) return;
+    if (gameOver || !currentPiece || isPaused) return;
     if (!collision(currentPiece.shape, currentPiece.x, currentPiece.y + 1)) {
       currentPiece.y++;
       draw();
@@ -397,7 +441,7 @@
 
   // ---------- 移动 ----------
   function move(dx) {
-    if (gameOver || !currentPiece) return;
+    if (gameOver || !currentPiece || isPaused) return;
     if (!collision(currentPiece.shape, currentPiece.x + dx, currentPiece.y)) {
       currentPiece.x += dx;
       draw();
@@ -406,7 +450,7 @@
 
   // ---------- 旋转 ----------
   function rotate() {
-    if (gameOver || !currentPiece) return;
+    if (gameOver || !currentPiece || isPaused) return;
     const shape = currentPiece.shape;
     const rotated = shape[0].map((_, idx) => shape.map(row => row[idx]).reverse());
     if (!collision(rotated, currentPiece.x, currentPiece.y)) {
@@ -417,7 +461,7 @@
 
   // ---------- 硬降 ----------
   function hardDrop() {
-    if (gameOver || !currentPiece) return;
+    if (gameOver || !currentPiece || isPaused) return;
     while (!collision(currentPiece.shape, currentPiece.x, currentPiece.y + 1)) {
       currentPiece.y++;
     }
@@ -425,18 +469,17 @@
     draw();
   }
 
-  // ---------- 绘制 ----------
-  function drawBlock(ctx, x, y, color, size, alpha = 1.0) {
+  // ---------- 绘制方块 ----------
+  function drawBlock(context, x, y, color, size, alpha = 1.0) {
     const colorVal = COLORS[color];
     const lightVal = LIGHT_COLORS[color];
     if (!colorVal) return;
 
-    ctx.save();
-    ctx.globalAlpha = alpha;
+    context.save();
+    context.globalAlpha = alpha;
 
-    // 主体（圆角矩形）
     const r = size * 0.08;
-    const grad = ctx.createRadialGradient(
+    const grad = context.createRadialGradient(
       x + size * 0.2, y + size * 0.2, size * 0.05,
       x + size / 2, y + size / 2, size * 0.6
     );
@@ -444,32 +487,32 @@
     grad.addColorStop(0.7, colorVal);
     grad.addColorStop(1, colorVal);
 
-    ctx.shadowColor = 'rgba(90, 74, 58, 0.04)';
-    ctx.shadowBlur = 6;
+    context.shadowColor = 'rgba(90, 74, 58, 0.04)';
+    context.shadowBlur = 6;
 
-    ctx.beginPath();
-    ctx.roundRect(x + 1, y + 1, size - 2, size - 2, r);
-    ctx.fillStyle = grad;
-    ctx.fill();
+    context.beginPath();
+    context.roundRect(x + 1, y + 1, size - 2, size - 2, r);
+    context.fillStyle = grad;
+    context.fill();
 
-    ctx.shadowBlur = 0;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-    ctx.lineWidth = 0.5;
-    ctx.stroke();
+    context.shadowBlur = 0;
+    context.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    context.lineWidth = 0.5;
+    context.stroke();
 
-    // 高光
-    ctx.beginPath();
-    ctx.roundRect(x + size * 0.15, y + size * 0.1, size * 0.25, size * 0.12, 2);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-    ctx.fill();
+    context.beginPath();
+    context.roundRect(x + size * 0.15, y + size * 0.1, size * 0.25, size * 0.12, 2);
+    context.fillStyle = 'rgba(255, 255, 255, 0.15)';
+    context.fill();
 
-    ctx.restore();
+    context.restore();
   }
 
+  // ---------- 绘制主画布 ----------
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 网格（极淡）
+    // 网格
     ctx.strokeStyle = 'rgba(194, 130, 122, 0.02)';
     ctx.lineWidth = 0.5;
     for (let i = 0; i <= COLS; i++) {
@@ -512,12 +555,12 @@
     if (gameOver) {
       ctx.fillStyle = 'rgba(90, 74, 58, 0.08)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.font = '18px "PingFang SC", sans-serif';
+      ctx.font = '16px "PingFang SC", sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = 'rgba(90, 74, 58, 0.40)';
       ctx.fillText('💭 再试一次', canvas.width / 2, canvas.height / 2 - 8);
-      ctx.font = '11px "PingFang SC", sans-serif';
+      ctx.font = '10px "PingFang SC", sans-serif';
       ctx.fillStyle = 'rgba(90, 74, 58, 0.20)';
       ctx.fillText('陆沉说：我陪你重新来', canvas.width / 2, canvas.height / 2 + 24);
     }
@@ -529,7 +572,7 @@
     if (!nextPiece) return;
     const shape = nextPiece.shape;
     const color = nextPiece.color;
-    const size = 20;
+    const size = 18;
     const offX = (nextCanvas.width - shape[0].length * size) / 2;
     const offY = (nextCanvas.height - shape.length * size) / 2;
     for (let r = 0; r < shape.length; r++) {
@@ -539,6 +582,38 @@
         }
       }
     }
+  }
+
+  // ---------- 重启游戏 ----------
+  function restartGame() {
+    if (gameInterval) {
+      clearInterval(gameInterval);
+      gameInterval = null;
+    }
+    initGrid();
+    score = 0;
+    linesCleared = 0;
+    dropInterval = 500;
+    gameOver = false;
+    isPaused = false;
+    scoreDisplay.textContent = '0';
+    messageBox.textContent = '← → 移动 · 点击旋转';
+    nextPiece = createPiece();
+    spawnPiece();
+    gameInterval = setInterval(drop, dropInterval);
+  }
+
+  // ---------- roundRect polyfill ----------
+  if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
+      const r = typeof radii === 'number' ? radii : (radii || 0);
+      this.moveTo(x + r, y);
+      this.arcTo(x + w, y, x + w, y + h, r);
+      this.arcTo(x + w, y + h, x, y + h, r);
+      this.arcTo(x, y + h, x, y, r);
+      this.arcTo(x, y, x + w, y, r);
+      return this;
+    };
   }
 
   // ---------- 事件绑定 ----------
@@ -552,10 +627,11 @@
     if (e.key === 'r' || e.key === 'R') { restartGame(); }
   });
 
-  // 触摸/点击控制
+  // 触摸控制
   let touchStartX = 0;
   let touchStartY = 0;
   let touchStartTime = 0;
+  let isSwiping = false;
 
   canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
@@ -563,6 +639,7 @@
     touchStartX = touch.clientX;
     touchStartY = touch.clientY;
     touchStartTime = Date.now();
+    isSwiping = false;
   }, { passive: false });
 
   canvas.addEventListener('touchmove', (e) => {
@@ -571,19 +648,27 @@
     const touch = e.touches[0];
     const dx = touch.clientX - touchStartX;
     const dy = touch.clientY - touchStartY;
-    if (Math.abs(dx) > 30) {
+    if (Math.abs(dx) > 25) {
+      isSwiping = true;
       move(dx > 0 ? 1 : -1);
       touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    } else if (Math.abs(dy) > 25 && dy > 0) {
+      isSwiping = true;
+      drop();
+      touchStartY = touch.clientY;
     }
   }, { passive: false });
 
   canvas.addEventListener('touchend', (e) => {
     e.preventDefault();
     const dt = Date.now() - touchStartTime;
-    if (dt < 200) {
+    if (dt < 200 && !isSwiping) {
       rotate();
     }
     touchStartX = 0;
+    touchStartY = 0;
+    isSwiping = false;
   }, { passive: false });
 
   // 鼠标点击（旋转）
@@ -591,36 +676,8 @@
     rotate();
   });
 
-  // ---------- 重启 ----------
-  function restartGame() {
-    if (gameInterval) {
-      clearInterval(gameInterval);
-      gameInterval = null;
-    }
-    initGrid();
-    score = 0;
-    linesCleared = 0;
-    dropInterval = 500;
-    gameOver = false;
-    scoreDisplay.textContent = '0';
-    messageBox.textContent = '左右滑动 · 点击旋转';
-    nextPiece = createPiece();
-    spawnPiece();
-    gameInterval = setInterval(drop, dropInterval);
-  }
-
-  // ---------- roundRect polyfill for canvas ----------
-  if (!CanvasRenderingContext2D.prototype.roundRect) {
-    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
-      const r = typeof radii === 'number' ? radii : (radii || 0);
-      this.moveTo(x + r, y);
-      this.arcTo(x + w, y, x + w, y + h, r);
-      this.arcTo(x + w, y + h, x, y + h, r);
-      this.arcTo(x, y + h, x, y, r);
-      this.arcTo(x, y, x + w, y, r);
-      return this;
-    };
-  }
+  // 重来按钮
+  document.getElementById('restartBtn').addEventListener('click', restartGame);
 
   // ---------- 启动 ----------
   initGrid();
