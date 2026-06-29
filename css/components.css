@@ -1513,3 +1513,448 @@
   text-align: center;
 }
 
+
+/* ============================================================
+   游戏层样式
+   ============================================================ */
+#game-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  background: var(--bg);
+  flex-direction: column;
+}
+#game-overlay.show { display: flex !important; }
+
+.game-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: calc(env(safe-area-inset-top,0px) + 8px) 0
+           calc(env(safe-area-inset-bottom,0px) + 8px);
+}
+
+/* 顶栏 */
+.game-screen-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.game-back-btn {
+  background: var(--rose-xlight);
+  border: 1px solid var(--rose-light);
+  color: var(--rose-dark);
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+}
+.game-screen-title {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--brown);
+}
+.snake-score-wrap {
+  font-size: 13px;
+  color: var(--rose-dark);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* AI 评论条 */
+.snake-ai-comment {
+  font-size: 12px;
+  color: var(--brown-mute);
+  text-align: center;
+  padding: 4px 16px 8px;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  min-height: 28px;
+}
+
+/* 游戏选择菜单 */
+.game-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding: 16px;
+  flex: 1;
+  align-content: center;
+}
+.game-menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.game-menu-item:active .game-menu-icon { transform: scale(0.88); }
+.game-menu-icon {
+  width: 72px; height: 72px;
+  border-radius: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transition: transform 0.18s var(--ease-spring);
+}
+.game-menu-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--brown);
+  letter-spacing: 0.5px;
+}
+.game-menu-desc {
+  font-size: 10px;
+  color: var(--brown-mute);
+  letter-spacing: 0.3px;
+}
+
+/* AI 底部气泡 */
+.game-ai-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  margin: 0 16px 8px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  flex-shrink: 0;
+}
+.game-ai-av { font-size: 22px; flex-shrink: 0; }
+.game-ai-text { font-size: 13px; color: var(--brown-light); line-height: 1.6; }
+
+/* Canvas 贪吃蛇 */
+#snake-canvas {
+  flex: 1;
+  display: block;
+  margin: 0 16px;
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  touch-action: none;
+  max-height: 320px;
+  width: calc(100% - 32px);
+}
+
+/* 方向键 */
+.snake-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 0 4px;
+  flex-shrink: 0;
+}
+.snake-ctrl-row { display: flex; gap: 4px; }
+.snake-btn {
+  width: 52px; height: 52px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--brown-light);
+  transition: all 0.15s var(--ease-spring);
+  -webkit-user-select: none;
+}
+.snake-btn:active { background: var(--rose-xlight); transform: scale(0.88); color: var(--rose-dark); }
+
+/* 开始按钮 */
+.game-start-btn {
+  margin: 8px 16px 4px;
+  padding: 12px 0;
+  background: var(--rose-light);
+  color: var(--brown);
+  border: none;
+  border-radius: var(--radius-btn);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.2s var(--ease-spring);
+  flex-shrink: 0;
+}
+.game-start-btn:active { transform: scale(0.97); background: var(--rose); }
+
+/* 消消乐棋盘 */
+.puzzle-board {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+  padding: 12px 16px;
+  align-content: center;
+  justify-content: center;
+}
+.puzzle-cell {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  border: 1.5px solid var(--card-border);
+  background: var(--card);
+  transition: transform 0.18s var(--ease-spring), opacity 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.puzzle-cell:active { transform: scale(0.88); }
+.puzzle-cell.selected { border-color: var(--rose); background: var(--rose-xlight); transform: scale(1.08); }
+.puzzle-cell.removing { opacity: 0; transform: scale(0.6); }
+
+/* 五子棋 */
+#gomoku-canvas {
+  flex: 1;
+  display: block;
+  margin: 0 16px;
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  background: #F5DEB3;
+  touch-action: none;
+  max-height: 340px;
+  width: calc(100% - 32px);
+}
+
+/* ============================================================
+   游戏页样式
+   ============================================================ */
+
+/* 游戏选择页 */
+#page-games {
+  padding: 12px 16px;
+}
+
+.game-select-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--brown);
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.game-select-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.game-select-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-spring);
+  box-shadow: var(--shadow);
+}
+.game-select-card:active { transform: scale(0.97); background: var(--rose-xlight); }
+
+.game-select-icon { font-size: 36px; flex-shrink: 0; }
+.game-select-name { font-size: 15px; font-weight: 500; color: var(--brown); }
+.game-select-desc { font-size: 12px; color: var(--brown-mute); margin-top: 3px; }
+
+/* 游戏画布页 */
+#page-game-canvas {
+  padding: 10px 14px;
+  align-items: center;
+}
+
+.game-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.game-back-btn {
+  background: var(--rose-xlight);
+  border: 1px solid var(--rose-light);
+  color: var(--rose-dark);
+  border-radius: 10px;
+  padding: 5px 12px;
+  font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.game-back-btn:active { background: var(--rose-light); }
+
+.game-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--brown);
+  flex: 1;
+  letter-spacing: 1px;
+}
+
+.game-score {
+  font-size: 13px;
+  color: var(--rose-dark);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* AI气泡 */
+.game-ai-bubble {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--brown-light);
+  margin-bottom: 10px;
+  width: 100%;
+  flex-shrink: 0;
+  box-shadow: var(--shadow);
+}
+
+/* 画布 */
+#game-canvas {
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  max-width: 100%;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+/* 游戏控制区 */
+#game-controls {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  flex-shrink: 0;
+}
+
+/* 贪吃蛇方向键 */
+.snake-dpad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.dpad-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.dpad-btn {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--rose-dark);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow);
+  transition: all 0.15s var(--ease-spring);
+}
+.dpad-btn:active { transform: scale(0.88); background: var(--rose-xlight); }
+.dpad-center {
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+
+/* 消消乐棋盘 */
+.puzzle-board {
+  display: grid;
+  gap: 3px;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+.puzzle-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  transition: all 0.18s var(--ease-spring);
+  line-height: 1;
+}
+.puzzle-cell:active { transform: scale(0.88); }
+.puzzle-cell.selected {
+  border-color: var(--rose);
+  background: var(--rose-xlight);
+  transform: scale(1.08);
+  box-shadow: 0 0 8px var(--rose-dim);
+}
+
+/* ============================================================
+   全部日记页
+   ============================================================ */
+#page-diary-all {
+  padding: 12px 16px;
+}
+
+.diary-all-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--brown);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.diary-all-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.diary-all-list::-webkit-scrollbar { width: 0; }
+
+.diary-entry-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.diary-entry-card::before {
+  content: '📖';
+  position: absolute;
+  top: 14px; right: 16px;
+  font-size: 16px;
+  opacity: 0.4;
+}
+
+.diary-entry-date {
+  font-size: 11px;
+  color: var(--rose);
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.diary-entry-content {
+  font-size: 13px;
+  color: var(--brown-light);
+  line-height: 1.85;
+  font-weight: 300;
+  letter-spacing: 0.3px;
+}

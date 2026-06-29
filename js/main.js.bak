@@ -137,13 +137,16 @@ function openRightPanel() {
   tap();
   document.getElementById('right-panel').classList.add('open');
   document.getElementById('right-overlay').classList.add('show');
-  // 同步设置值
-  document.getElementById('ai-key-input').value  = Store.get('aiKey', '');
-  document.getElementById('ai-provider').value   = Store.get('aiProvider', 'deepseek');
+  document.getElementById('ai-key-input').value      = Store.get('aiKey', '');
+  document.getElementById('ai-provider').value        = Store.get('aiProvider', 'deepseek');
+  document.getElementById('el-key-input').value       = Store.get('elKey', '');
+  document.getElementById('voice-id-input').value     = Store.get('voiceId', '');
+  document.getElementById('weather-key-input').value  = Store.get('weatherKey', '');
+  document.getElementById('weather-city-input').value = Store.get('city', '');
   document.getElementById('proactive-toggle').checked = Store.get('proactive','') === 'true';
-  document.getElementById('proactive-time').value = Store.get('proactiveTime','20:00');
-  document.getElementById('diary-toggle').checked = Store.get('diaryOn','') === 'true';
-  document.getElementById('diary-time').value     = Store.get('diaryTime','22:00');
+  document.getElementById('proactive-time').value     = Store.get('proactiveTime','20:00');
+  document.getElementById('diary-toggle').checked     = Store.get('diaryOn','') === 'true';
+  document.getElementById('diary-time').value         = Store.get('diaryTime','22:00');
 }
 
 function closeRightPanel() {
@@ -171,15 +174,21 @@ document.getElementById('left-save-btn').addEventListener('click', () => {
 
 // 右面板保存
 document.getElementById('right-save-btn').addEventListener('click', () => {
-  Store.set('aiKey',          document.getElementById('ai-key-input').value);
+  Store.set('aiKey',          document.getElementById('ai-key-input').value.trim());
   Store.set('aiProvider',     document.getElementById('ai-provider').value);
+  Store.set('elKey',          document.getElementById('el-key-input').value.trim());
+  Store.set('voiceId',        document.getElementById('voice-id-input').value.trim());
+  Store.set('weatherKey',     document.getElementById('weather-key-input').value.trim());
+  Store.set('city',           document.getElementById('weather-city-input').value.trim());
   Store.set('proactive',      document.getElementById('proactive-toggle').checked.toString());
   Store.set('proactiveTime',  document.getElementById('proactive-time').value);
   Store.set('diaryOn',        document.getElementById('diary-toggle').checked.toString());
   Store.set('diaryTime',      document.getElementById('diary-time').value);
   closeRightPanel();
   tap([10,10]);
-  addPush('⚙️', 'AI设置已保存', true);
+  addPush('⚙️', '设置已保存 ✅', true);
+  // 如果填了天气key就立即刷新
+  if (Store.get('weatherKey','')) loadWeather();
 });
 
 // 显示/隐藏 API Key

@@ -106,13 +106,25 @@
     <option value="claude">Claude</option>
   </select>
 
-  <div class="panel-field-label">API Key</div>
+  <div class="panel-field-label">AI API Key（DeepSeek / OpenAI）</div>
   <input class="panel-input" id="ai-key-input" type="password" placeholder="sk-...">
   <button class="panel-btn" id="show-key-btn" style="margin-top:6px">👁 显示/隐藏</button>
 
   <div class="panel-field-label">Token 余额</div>
   <div class="token-display" id="token-display">— 点击刷新 —</div>
   <button class="panel-btn" id="refresh-token-btn">🔄 刷新余额</button>
+
+  <div class="panel-section-title">语音合成（ElevenLabs）</div>
+  <div class="panel-field-label">ElevenLabs API Key</div>
+  <input class="panel-input" id="el-key-input" type="password" placeholder="sk_...">
+  <div class="panel-field-label">Voice ID</div>
+  <input class="panel-input" id="voice-id-input" type="text" placeholder="p1YcLh1gvGfUTIAip2HW">
+
+  <div class="panel-section-title">天气</div>
+  <div class="panel-field-label">OpenWeatherMap API Key</div>
+  <input class="panel-input" id="weather-key-input" type="password" placeholder="API Key">
+  <div class="panel-field-label">城市（英文）</div>
+  <input class="panel-input" id="weather-city-input" type="text" placeholder="Shanghai">
 
   <div class="panel-section-title">主动讲话</div>
   <div class="panel-switch-row">
@@ -296,6 +308,46 @@
       </div>
     </div>
 
+    <!-- 游戏选择页 -->
+    <div class="page" id="page-games">
+      <div class="game-select-header">
+        <button class="game-back-btn" onclick="switchPage('more')">‹ 返回</button>
+        <span>🎮 游戏</span>
+      </div>
+      <div class="game-select-grid">
+        <div class="game-select-card" onclick="startGame('snake')">
+          <div class="game-select-icon">🐍</div>
+          <div class="game-select-name">贪吃蛇</div>
+          <div class="game-select-desc">吃掉爱心，别咬到自己</div>
+        </div>
+        <div class="game-select-card" onclick="startGame('puzzle')">
+          <div class="game-select-icon">🌸</div>
+          <div class="game-select-name">消消乐</div>
+          <div class="game-select-desc">三消，连消陆沉夸你</div>
+        </div>
+        <div class="game-select-card" onclick="startGame('gomoku')">
+          <div class="game-select-icon">⚫</div>
+          <div class="game-select-name">五子棋</div>
+          <div class="game-select-desc">和陆沉对弈</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 游戏画布页 -->
+    <div class="page" id="page-game-canvas">
+      <div class="game-header">
+        <button class="game-back-btn" id="game-back-btn">‹ 返回</button>
+        <span class="game-title" id="game-title">游戏</span>
+        <span class="game-score" id="game-score"></span>
+      </div>
+      <div class="game-ai-bubble" id="game-ai-bubble" style="display:none">
+        <span>🐻</span>
+        <span id="game-ai-text"></span>
+      </div>
+      <canvas id="game-canvas"></canvas>
+      <div class="game-controls" id="game-controls"></div>
+    </div>
+
     <!-- 更多页 -->
     <div class="page" id="page-more">
       <div class="more-header">更多功能</div>
@@ -367,6 +419,84 @@
 
 </div><!-- /app -->
 
+<!-- 游戏层（全屏遮罩）-->
+<div id="game-overlay" style="display:none">
+  <!-- 游戏选择页 -->
+  <div id="game-menu" class="game-screen">
+    <div class="game-screen-header">
+      <button class="game-back-btn" onclick="closeGameOverlay()">‹ 返回</button>
+      <div class="game-screen-title">小游戏</div>
+    </div>
+    <div class="game-menu-grid">
+      <div class="game-menu-item" onclick="launchGame('snake')">
+        <div class="game-menu-icon" style="background:linear-gradient(135deg,#C2827A,#E8B4AE)">🐍</div>
+        <div class="game-menu-name">贪吃蛇</div>
+        <div class="game-menu-desc">吃爱心，长长的</div>
+      </div>
+      <div class="game-menu-item" onclick="launchGame('puzzle')">
+        <div class="game-menu-icon" style="background:linear-gradient(135deg,#A080C0,#C8A8E0)">🌸</div>
+        <div class="game-menu-name">消消乐</div>
+        <div class="game-menu-desc">三消，有惊喜</div>
+      </div>
+      <div class="game-menu-item" onclick="launchGame('gomoku')">
+        <div class="game-menu-icon" style="background:linear-gradient(135deg,#7A9EC8,#A8C8E8)">⚫</div>
+        <div class="game-menu-name">五子棋</div>
+        <div class="game-menu-desc">和陆沉对弈</div>
+      </div>
+    </div>
+    <div class="game-ai-bar" id="game-ai-bar">
+      <span class="game-ai-av">🐻</span>
+      <div class="game-ai-text" id="game-ai-text">来玩游戏吗？我陪你。</div>
+    </div>
+  </div>
+
+  <!-- 贪吃蛇 -->
+  <div id="game-snake" class="game-screen" style="display:none">
+    <div class="game-screen-header">
+      <button class="game-back-btn" onclick="showGameMenu()">‹</button>
+      <div class="game-screen-title">贪吃蛇</div>
+      <div class="snake-score-wrap">💕 <span id="snake-score">0</span></div>
+    </div>
+    <div class="snake-ai-comment" id="snake-ai-comment">准备好了吗，我看着你～</div>
+    <canvas id="snake-canvas"></canvas>
+    <div class="snake-controls">
+      <div class="snake-ctrl-row">
+        <button class="snake-btn" onclick="snakeDir(0,-1)">▲</button>
+      </div>
+      <div class="snake-ctrl-row">
+        <button class="snake-btn" onclick="snakeDir(-1,0)">◀</button>
+        <button class="snake-btn" onclick="snakeDir(0,1)">▼</button>
+        <button class="snake-btn" onclick="snakeDir(1,0)">▶</button>
+      </div>
+    </div>
+    <button class="game-start-btn" id="snake-start-btn" onclick="startSnake()">▶ 开始</button>
+  </div>
+
+  <!-- 消消乐 -->
+  <div id="game-puzzle" class="game-screen" style="display:none">
+    <div class="game-screen-header">
+      <button class="game-back-btn" onclick="showGameMenu()">‹</button>
+      <div class="game-screen-title">消消乐</div>
+      <div class="snake-score-wrap">⭐ <span id="puzzle-score">0</span></div>
+    </div>
+    <div class="snake-ai-comment" id="puzzle-ai-comment">三个相同的就能消～</div>
+    <div id="puzzle-board" class="puzzle-board"></div>
+    <button class="game-start-btn" id="puzzle-start-btn" onclick="startPuzzle()">▶ 开始</button>
+  </div>
+
+  <!-- 五子棋 -->
+  <div id="game-gomoku" class="game-screen" style="display:none">
+    <div class="game-screen-header">
+      <button class="game-back-btn" onclick="showGameMenu()">‹</button>
+      <div class="game-screen-title">五子棋</div>
+      <div class="snake-score-wrap" id="gomoku-turn">你先</div>
+    </div>
+    <div class="snake-ai-comment" id="gomoku-ai-comment">黑子先行，我执白子。</div>
+    <canvas id="gomoku-canvas"></canvas>
+    <button class="game-start-btn" id="gomoku-reset-btn" onclick="resetGomoku()">🔄 重新开始</button>
+  </div>
+</div>
+
 <!-- 脚本 -->
 <script src="js/utils.js"></script>
 <script src="js/wallpaper.js"></script>
@@ -377,6 +507,9 @@
 <script src="js/chat.js"></script>
 <script src="js/focus.js"></script>
 <script src="js/main.js"></script>
+<script src="js/game-snake.js"></script>
+<script src="js/game-puzzle.js"></script>
+<script src="js/game-gomoku.js"></script>
 <script>
   initApp();
   if ('serviceWorker' in navigator) {
