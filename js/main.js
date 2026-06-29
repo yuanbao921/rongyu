@@ -935,23 +935,3 @@ function initApp() {
   addChatMsg('sys', '🐻 小熊已上线 🐰');
 }
 
-function refreshGridQuote() {
-  tap();
-  showRandomQuote();
-}
-
-/* ========== 初始化 ========== */
-function initApp() {
-  restoreTheme();
-  initSplash();
-  setupAvatarUpload('bear');
-  setupAvatarUpload('bunny');
-  setGreeting();
-  showRandomQuote();
-  updateAnniversary();
-  renderPushes();
-  setupMood();
-  renderNotes();
-  generateDiary();
-  addChatMsg('sys', '🐻 小熊已上线 🐰');
-}
